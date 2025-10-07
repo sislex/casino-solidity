@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class GameDataService {
   constructor(private http: HttpClient) {}
 
-  private apiUrl = 'http://localhost:3000/game';
+  private apiUrl =  `${environment.hostUrl}/game`;
 
   getGameList(data: {type: string, player: string}): Observable<any> {
     return this.http.post(`${this.apiUrl}/getGameList`, {type: data.type, player: data.player} );
