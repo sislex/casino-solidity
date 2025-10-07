@@ -1,0 +1,41 @@
+<!-- Уведомления об ошибках (появляются снизу) -->
+<div class="error-notifications-container">
+  <div 
+    *ngFor="let error of visibleErrors; trackBy: trackByErrorId" 
+    class="error-notification"
+    [ngClass]="getErrorTypeClass(error.type)"
+    [@slideInFromBottom]
+  >
+    <div class="error-notification-content">
+      <div class="error-notification-icon">
+        {{ getErrorIcon(error.type) }}
+      </div>
+      <div class="error-notification-body">
+        <div class="error-notification-title">
+          {{ getErrorTypeTitle(error.type) }}
+        </div>
+        <div class="error-notification-message">
+          {{ error.message }}
+        </div>
+        <div class="error-notification-time">
+          {{ formatErrorTime(error.timestamp) }}
+        </div>
+      </div>
+      <button 
+        class="error-notification-close" 
+        (click)="removeError(error.id)"
+        title="Закрыть ошибку"
+      >
+        ×
+      </button>
+    </div>
+    
+    <!-- Прогресс-бар для автозакрытия -->
+    <div class="error-notification-progress">
+      <div 
+        class="error-notification-progress-bar"
+        [style.animation-duration]="'5s'"
+      ></div>
+    </div>
+  </div>
+</div>

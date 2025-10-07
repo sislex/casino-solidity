@@ -1,0 +1,27 @@
+<div class="content">
+  <table>
+    <thead>
+    <tr>
+      <th colspan="5" class="title">Game Data</th>
+    </tr>
+    <tr>
+      <th>#</th>
+      <th>Created</th>
+      <th>Finished</th>
+      <th>Bet</th>
+      <th>Number of players</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ gameData.id }}</td>
+      <td>{{ gameData.createdAt | date:'medium' }}</td>
+      <td>
+          {{ gameData.finishedAt | date:'medium' }}
+      </td>
+      <td>{{ gameData.bet }}</td>
+      <td>{{ gameData.playersNumber}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

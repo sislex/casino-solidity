@@ -1,0 +1,94 @@
+<div class="game-page">
+  <div class="players-select">
+    <app-multiselect
+      [toppingList]="playerList"
+      [selectedToppings]="gameData.playerList"
+      (emitter)="emitter.emit($event)"
+    ></app-multiselect>
+  </div>
+
+  <div class="players">
+    @for (player of gameData.playerList; track player) {
+      <div>
+        <app-player-profile
+          [title]="player.name"
+          [address]="player.address"
+          [balance]="player.balance ?? null"
+          (emitter)="events($event)"
+        ></app-player-profile>
+      </div>
+    }
+  </div>
+
+  <div class="start-button">
+    <app-button
+      [buttonLabel]="'Start'"
+      (emitter)="events($event)"
+    >
+    </app-button>
+  </div>
+
+  <div class="players-pay">
+    @for (player of gameData.playerList; track player) {
+      <app-button
+        [buttonLabel]="player.name + ': Pay 3 ETH'"
+      >
+      </app-button>
+    }
+  </div>
+
+  <div class="bank">
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <span>
+          <b>Main bank:</b> {{gameData.bank}} {{gameData.currency}}
+        </span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="players">
+    @for (player of gameData.playerList; track player) {
+      <div class="percentage">
+        <mat-label>{{ player.name }} in game</mat-label>
+        <form class="example-form">
+          <mat-form-field class="input-field">
+            <mat-label>Set percentage</mat-label>
+            <input
+              matInput
+              placeholder="Set percentage for winners"
+              [(ngModel)]="player.percentage"
+              [ngModelOptions]="{standalone: true}"
+            >
+          </mat-form-field>
+        </form>
+      </div>
+    }
+  </div>
+
+  <div class="start-button">
+    <app-button
+      [buttonLabel]="'Finish'"
+      (emitter)="events($event)"
+    >
+    </app-button>
+  </div>
+
+  <div class="info-form">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Game info</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="content-info">
+        @for (item of infoList; track item) {
+          <span class="info-row">
+            <b>-{{ item.title }}</b>
+            <span class="example-spacer"></span>
+            <span class="info-data">{{ item.data }}</span>
+          </span>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

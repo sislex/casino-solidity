@@ -1,0 +1,82 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  .header {
+    display: flex;
+    flex: 0 0 auto;
+    height: 60px;
+    background-color: rgb(50, 55, 56);
+    color: white;
+    align-items: center;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 18px;
+    border-bottom: black 2px solid;
+  }
+
+  .body {
+    flex: 1 1 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.home-icon {
+  margin-right: 16px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-mdc-raised-button {
+  background-color: rgb(50, 55, 56) !important;
+  color: white !important;
+}
+
+.footer-button {
+  margin: 8px;
+}
+
+.footer-button:disabled {
+  color: gray !important;
+}
+
+.pay-button {
+  border: 1px solid black;
+  margin: 8px;
+  background: linear-gradient(90deg, #1aa964, #8bca5d);
+  box-shadow:
+    rgba(35, 238, 136, 0.4) 0 0 15px 0,
+    rgb(29, 202, 106) 0 -2px 0 0 inset;
+}
+
+.left-group {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 500px;
+}
+
+.middle-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  //flex: 1;
+  align-items: center;
+
+  font-size: 16px;
+  font-weight: bold;
+  //background-color: #7f1d1d;
+}
+
+.right-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  flex: 1;
+  align-items: center;
+}

@@ -1,0 +1,15 @@
+<mat-toolbar class="header">
+  <div class="header-content">
+    <button mat-icon-button class="sidebar-toggle" (click)="toggleSidebar()">
+      <mat-icon class="toggle">menu</mat-icon>
+    </button>
+    <div class="spacer"></div>
+    @if (!player?.isLogin) {
+      <app-login-button (click)="events('login')" [label]="'Login'"></app-login-button>
+      <app-register-button (click)="events('registration')" [label]="'Registration'"></app-register-button>
+    }
+    @if (player?.isLogin) {
+      <app-logout-button (click)="events('logout')" [label]="'Logout'"></app-logout-button>
+    }
+  </div>
+</mat-toolbar>

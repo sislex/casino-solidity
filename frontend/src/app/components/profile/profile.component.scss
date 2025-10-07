@@ -1,0 +1,34 @@
+.example-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: rgb(50, 55, 56);
+  border-radius: 15px;
+  color: rgb(255, 255, 255);
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.dev/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 120px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.container-balance-reload {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 8px !important;
+
+  .title-balance {
+    align-self: end;
+  }
+}

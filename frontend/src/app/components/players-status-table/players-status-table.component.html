@@ -1,0 +1,29 @@
+<table>
+  <thead>
+  <tr>
+    <th>№</th>
+    <th>Player</th>
+    <th>Bet</th>
+    <th>Ready</th>
+  </tr>
+  </thead>
+  <tbody>
+    @for (item of data; track item.wallet) {
+      <tr>
+        <td>{{ $index + 1 }}</td>
+        <td>{{ item.wallet}}</td>
+        <td>
+          {{ item.bet }}
+        </td>
+        <td>
+          @if (item.bet) {
+            <mat-icon>check</mat-icon>
+          } @else {
+            <mat-icon class='renew'>autorenew</mat-icon>
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+

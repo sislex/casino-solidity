@@ -1,0 +1,203 @@
+/* You can add global styles to this file, and also import other style files */
+@import  '@angular/material/prebuilt-themes/indigo-pink.css';
+@import 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap';
+@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+
+html, body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+
+  font: 800 16px/24px avertastd;
+  color: #000;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+
+  background: linear-gradient(90deg, #24ee89, #9fe871);
+  border-radius: 8px;
+  box-shadow:
+    rgba(35, 238, 136, 0.3) 0 0 12px 0,
+    rgb(29, 202, 106) 0 -2px 0 0 inset;
+
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0 16px;
+
+  &:hover {
+    background: linear-gradient(90deg, #1aa964, #8bca5d);
+    box-shadow:
+      rgba(35, 238, 136, 0.4) 0 0 15px 0,
+      rgb(29, 202, 106) 0 -2px 0 0 inset;
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow:
+      rgba(35, 238, 136, 0.2) 0 0 8px 0,
+      rgb(29, 202, 106) 0 -1px 0 0 inset;
+  }
+}
+
+.default-button {
+  align-items: center;
+  appearance: button;
+  background-attachment: scroll;
+  background-clip: border-box;
+  background-color: rgba(0, 0, 0, 0);
+  background-image: none;
+  background-origin: padding-box;
+  background-position-x: 0%;
+  background-position-y: 0%;
+  background-repeat: repeat;
+  background-size: auto;
+  border-bottom-color: rgba(228, 234, 240, 0.098);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-image-outset: 0;
+  border-image-repeat: stretch;
+  border-image-slice: 100%;
+  border-image-source: none;
+  border-image-width: 1;
+  border-left-color: rgba(228, 234, 240, 0.098);
+  border-left-style: solid;
+  border-left-width: 2px;
+  border-right-color: rgba(228, 234, 240, 0.098);
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-top-color: rgba(228, 234, 240, 0.098);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  box-sizing: border-box;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  display: flex;
+  font-family: avertastd;
+  font-feature-settings: normal;
+  font-kerning: auto;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  font-size-adjust: none;
+  font-stretch: 100%;
+  font-style: normal;
+  font-variant-alternates: normal;
+  font-variant-caps: normal;
+  font-variant-east-asian: normal;
+  font-variant-emoji: normal;
+  font-variant-ligatures: normal;
+  font-variant-numeric: normal;
+  font-variant-position: normal;
+  font-variation-settings: normal;
+  font-weight: 400;
+  height: 40px;
+  justify-content: center;
+  letter-spacing: normal;
+  line-height: 24px;
+  margin-bottom: 0px;
+  margin-left: 12px;
+  margin-right: 0px;
+  margin-top: 0px;
+  padding-block-end: 0px;
+  padding-block-start: 0px;
+  padding-bottom: 0px;
+  padding-inline-end: 16px;
+  padding-inline-start: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 0px;
+  tab-size: 4;
+  text-align: center;
+  text-indent: 0px;
+  text-rendering: auto;
+  text-shadow: none;
+  text-size-adjust: 100%;
+  text-transform: none;
+  touch-action: manipulation;
+  user-select: none;
+  width: 78.4844px;
+  word-spacing: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-border-image: none;
+
+  &:hover {
+    background-color: rgba(228, 234, 240, 0.05);
+  }
+
+  &:active {
+    background-color: rgba(228, 234, 240, 0.1);
+  }
+}
+.cdk-overlay-pane {
+  width: 100%;
+  margin: 0 16px 0 16px;
+}
+
+.mat-mdc-menu-panel.custom-menu {
+  background-color: rgba(50, 55, 56, 0.7);
+  width: unset !important;
+  min-width: 800px !important;
+  max-width: 80% !important;
+  //min-height: 300px !important;
+  overflow-y: auto !important;
+  border-radius: 15px !important;
+
+
+  .mat-mdc-menu-content {
+    padding: 0 !important;
+    border-radius: 40px !important;
+  }
+
+  app-rounds-statistics {
+    .table-container{
+      opacity: 0.8;
+      margin: 0;
+      width: 100%;
+
+      table {
+        margin: 0;
+      }
+    }
+  }
+}
+
+.toggle {
+  color: white !important;
+  background-color: rgb(58, 65, 66) !important;
+  border-radius: 8px !important;
+  width: 50px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.3s ease !important;
+
+  &:hover {
+    background-color: rgb(68, 75, 76) !important;
+  }
+
+  mat-icon {
+    font-size: 24px !important;
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

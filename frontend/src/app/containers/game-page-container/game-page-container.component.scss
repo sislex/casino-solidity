@@ -1,0 +1,11 @@
+:host {
+  height: 100%;
+  display: flex;
+}
+app-game-page {
+  display: flex;
+  margin: auto;
+  width: 90%;
+  min-height: 100%;
+  overflow: hidden;
+}

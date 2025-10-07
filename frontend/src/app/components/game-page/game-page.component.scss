@@ -1,0 +1,122 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+      135deg,
+      #f5f5f5 0%,
+      #e0e0e0 50%,
+      #bdbdbd 100%
+  );
+  min-height: 100%;
+  justify-content: center;
+}
+
+.game-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 16px;
+
+  .players-select {
+    display: flex;
+    width: 100%;
+    align-items: center;
+
+    app-multiselect {
+      width: 100%;
+      display: flex;
+    }
+  }
+
+  .players {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    app-player-profile {
+      margin: 16px;
+    }
+
+    .percentage {
+      padding: 8px;
+    }
+  }
+
+  .start-button {
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+.example-form {
+  display: flex;
+
+  .input-field {
+    margin: 0 auto;
+    max-width: 400px;
+    width: 200px;
+    border-radius: 15px;
+  }
+}
+
+.bank {
+  margin: 16px;
+  width: 400px;
+
+  mat-card-content {
+    display: flex;
+    max-width: 100%;
+
+
+    span {
+      margin: auto;
+    }
+  }
+}
+
+.info-form {
+  margin: 16px;
+  width: 100%;
+
+  mat-card-content {
+    display: flex;
+  }
+}
+
+.content-info {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-header {
+  margin: 0 auto;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.info-data {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.info-row {
+  display: flex;
+}
+
+
+.players-pay {
+  display: flex;
+  flex-direction: row;
+  margin: 16px 0 0 0;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  app-button {
+    margin: 8px;
+  }
+}

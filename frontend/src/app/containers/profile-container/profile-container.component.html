@@ -1,0 +1,5 @@
+<app-profile
+  [user]="getUserData$ | async"
+  [balanceData]="(getBalanceData$ | async)!"
+  (emitter)="events($event)"
+></app-profile>

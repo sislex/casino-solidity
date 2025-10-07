@@ -1,0 +1,75 @@
+<div class="container">
+
+  <div class="header">
+    <button mat-icon-button class="toggle home-icon" (click)="event('home', gameType)">
+      <mat-icon>home</mat-icon>
+    </button>
+    <span>{{ gameType }}</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="toggle" (click)="event('reload', gameType)">
+      <mat-icon>replay</mat-icon>
+    </button>
+  </div>
+
+  <div class="table-container">
+    <table class="table">
+      <thead>
+      <tr class="table-header">
+        <th class="header-cell">#</th>
+        <th class="header-cell">ID</th>
+        <th class="header-cell">Players</th>
+        <th class="header-cell">Bots</th>
+        <th class="header-cell">Bet</th>
+        <th class="header-cell"></th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (game of (activeGamesList); track game.id + '-'; let i = $index) {
+          @if (!game.contractAddress) {
+            <tr class="table-row">
+              <td class="table-cell">{{ i + 1 }}</td>
+              <td class="table-cell">{{ game.id }}</td>
+              <td class="table-cell">{{ game.playerNumberSet }}/{{ game.playersNumber }}</td>
+              <td class="table-cell">{{ game.bots }}</td>
+              <td class="table-cell">{{ game.bet }}</td>
+              <td class="table-cell action-cell">
+
+                <button
+                  mat-raised-button
+                  class="manage-button join-button connect-button"
+                  (click)="manage('open-tab', game.id, gameType)"
+                >
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+
+              </td>
+            </tr>
+          } @else {
+            <tr class="table-row connected-row">
+              <td class="table-cell">{{ i + 1 }}</td>
+              <td class="table-cell">{{ game.id }}</td>
+              <td class="table-cell">{{ game.playerNumberSet }}/{{ game.playersNumber }}</td>
+              <td class="table-cell">{{ game.bots }}</td>
+              <td class="table-cell">{{ game.bet }}</td>
+              <td class="table-cell action-cell">
+
+                <button
+                  mat-raised-button
+                  class="manage-button join-button connect-button"
+                  (click)="manage('open-tab', game.id, gameType)"
+                >
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <button mat-raised-button (click)="event('create', gameType)">Create</button>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+@if ((selectActiveGameData$ | async)?.status === 'Waiting payment' || (selectActiveGameData$ | async)?.status === 'notStarted') {
+  <app-players-status-table-container></app-players-status-table-container>
+}
+@if ((selectActiveGameData$ | async)?.status === 'Game') {
+  <app-statistic-button
+    [roundsViewData]="roundsViewData$ | async"
+  ></app-statistic-button>
+  <div class="game-container">
+    <div class="container">
+      <div class="dice-wrapper"><app-dice [diceValue]="dice1Value" [isRotate]="isRotate"/></div>
+      <div class="dice-wrapper"><app-dice [diceValue]="dice2Value" [isRotate]="isRotate"/></div>
+    </div>
+    <div
+      class="container"
+    >
+      <button
+        class="button-roll"
+        [disabled]="!localYourPlay"
+        (click)="localYourPlay && roll()">
+        Roll Dice
+      </button>
+    </div>
+  </div>
+  <app-player-list-in-game-container
+    [activePlayer]="orderOfThrows"
+    [dataRound]="selectDiceDataRound$ | async"
+  ></app-player-list-in-game-container>
+}
+@if ((selectActiveGameData$ | async)?.status === 'Finished') {
+  <app-rock-paper-scissors
+    [gameData]="(selectActiveGameData$ | async)!"
+  ></app-rock-paper-scissors>
+  <app-winner
+    [name]="(selectNameWinner$ | async) || ''"
+  ></app-winner>
+  <app-rounds-statistics
+    [roundsViewData]="roundsViewData$ | async"
+  ></app-rounds-statistics>
+}
+
+

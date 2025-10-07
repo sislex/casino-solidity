@@ -1,0 +1,33 @@
+<app-game-layout
+  [title]="'Rock-Paper-Scissors'"
+  [player]="(getPlayer$ | async)"
+  [active]="isGameReady"
+  [gameData]="selectActiveGameData$ | async"
+  [isConnected]="!!(selectIsConnectedGame$ | async)"
+  [timer]="getTimer$ | async"
+  [round]="(getRoundNumber() | async)?.roundNumber || null"
+  [playerIsBet]="(selectIsBetGame$ | async) || false"
+  (emitter)="events($event)"
+>
+  @if ((paymentGameIsLoading$ | async) && !(paymentGameIsLoaded$ | async)) {
+    <app-loader
+      [title]="'You are in line to pay...'"
+    ></app-loader>
+  } @else {
+    @if ((selectActiveGameData$ | async)?.type ==='rock-paper-scissors')
+    {
+      <app-rock-paper-scissors-container
+        [gameData]="(selectActiveGameData$ | async)!"
+        (emitter)="events($event)"
+      />
+    } @else if ((selectActiveGameData$ | async)?.type ==='dice') {
+      <app-game-dice
+        [orderOfThrows]="(getOrderOfThrows$ | async)!"
+        [yourPlay]="(isYourPlay$ | async)!"
+        (emitter)="events($event)"
+      >
+      </app-game-dice>
+    }
+  }
+</app-game-layout>
+

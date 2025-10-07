@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.game-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+app-rock-paper-scissors-game {
+  display: flex;
+  flex: 1;
+}
+
+app-winner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
