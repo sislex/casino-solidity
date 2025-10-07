@@ -16,15 +16,15 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: 45.135.182.251
-          username: root
-          password: 9Sr2kv72PH5BuWJva7
-          port: 22
+          host: ${{ secrets.CASINO_SSH_HOST }}
+          username: ${{ secrets.CASINO_SSH_USER }}
+          password: ${{ secrets.CASINO_SSH_PASS }}
+          port: ${{ secrets.CASINO_SSH_PORT }}
           script: |
             echo "🔄 Pull latest code"
             cd ./casino-solidity
             echo "enter to casino-solidity"
             git pull
             echo "🐳 Build and restart containers"
-            docker-compose up --build -d
+            docker compose up --build -d
             echo "✅ Deployment finished"
