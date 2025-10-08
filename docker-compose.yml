@@ -17,12 +17,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
-    environment:
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_NAME: game
-      DB_USER: root
-      DB_PASSWORD: root
+    env_file:
+      - ./backend/.env
 #    volumes:
 #      - .:/app
 #      - /app/node_modules

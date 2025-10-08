@@ -1,48 +1,57 @@
 <div class="container">
   <div class="result">
     <div class="tool">
-
       <span class="login">
-        Results game: {{ (selectActiveGameData$ | async)?.id }}
+        Game results: <strong>{{ (selectActiveGameData$ | async)?.id }}</strong>
       </span>
 
       <span class="example-spacer"></span>
 
-      <button class="close-button" type="button" aria-label="close" (click)="close()">
-        <svg class="close-icon" viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M6.32 9.23L13.09 16l-6.77 6.77L9.23 25.68 16 18.91l6.77 6.77 2.91-2.91-6.77-6.77 6.77-6.77-2.91-2.91L16 13.09 9.23 6.32 6.32 9.23z"/>
-        </svg>
+      <button class="close-button" type="button" (click)="close()">
+        ✕
       </button>
-
     </div>
 
-    <div class="result-info">
-      <span>
-        Game type: {{ (selectActiveGameData$ | async)?.type }}
-      </span>
-      @if (!!(selectActiveGameData$ | async)?.createdAt && !!(selectActiveGameData$ | async)?.finishedAt && (result !== null)) {
+    <div class="result-card">
+      <div class="result-info">
         <span>
-          Duration: {{
-            calculateDuration(
-              (selectActiveGameData$ | async)?.createdAt,
-              (selectActiveGameData$ | async)?.finishedAt
-            ) | durationFormat
-          }}
+          Game type: <strong>{{ (selectActiveGameData$ | async)?.type }}</strong>
         </span>
-      }
-      <span>
-        Winner: {{ (selectNameWinner$ | async) || '' }}
-      </span>
-      @if (result !== null) {
+
+        @if (
+          !!(selectActiveGameData$ | async)?.createdAt &&
+          !!(selectActiveGameData$ | async)?.finishedAt &&
+          (result !== null)
+          ) {
+          <span>
+            Duration:
+            <strong>
+              {{
+                calculateDuration(
+                  (selectActiveGameData$ | async)?.createdAt,
+                  (selectActiveGameData$ | async)?.finishedAt
+                ) | durationFormat
+              }}
+            </strong>
+          </span>
+        }
+
         <span>
-          Your result: {{ result }}
+          Winner: <strong>{{ (selectNameWinner$ | async) || 'Is determined' }}</strong>
         </span>
+
+        @if (result !== null) {
+          <span>
+            Your result: <strong>{{ result }}</strong>
+          </span>
+        }
+      </div>
+
+      @if (result === null) {
+        <div class="wait-result">
+          Your winnings are being calculated — please wait...
+        </div>
       }
     </div>
-    @if (result === null) {
-      <span class="wait-result">
-          Your winnings are being calculated - please wait...
-        </span>
-    }
   </div>
 </div>
