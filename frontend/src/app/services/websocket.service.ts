@@ -4,7 +4,7 @@ import {environment} from '../../environments/environment';
 import {setGameData, setTimer} from '../+state/game-data/game-data.actions';
 import {Store} from '@ngrx/store';
 import {ResultsContainerComponent} from '../containers/results-container/results-container.component';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {resetActiveGameElements, setRpsRoundsData} from '../+state/rps-game/rps-game.actions';
 import {setDiceRoundsData} from '../+state/dice-game/dice-game.actions';
 import {ErrorHandlerService} from './error-handler.service';
@@ -15,6 +15,7 @@ export class WebsocketService {
   private socket: Socket | null = null;
   private gameId?: number;
   private wallet?: string;
+  private resultsDialogRef: MatDialogRef<ResultsContainerComponent> | null = null;
 
   private store = inject(Store);
   private dialog = inject(MatDialog);
@@ -97,10 +98,18 @@ export class WebsocketService {
   }
 
   openFinishedModal(): void {
-    this.dialog.open(ResultsContainerComponent, {
+    if (this.resultsDialogRef) {
+      this.resultsDialogRef.close();
+    }
+
+    this.resultsDialogRef = this.dialog.open(ResultsContainerComponent, {
       width: '30%',
       height: '30%',
       hasBackdrop: true,
+    });
+
+    this.resultsDialogRef.afterClosed().subscribe(() => {
+      this.resultsDialogRef = null;
     });
   }
 

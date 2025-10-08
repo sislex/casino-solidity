@@ -10,4 +10,6 @@ COPY . .
 RUN npm install @nestjs/cli
 RUN npx nest build
 
+COPY ./src/blockchain ./dist/blockchain
+
 CMD ["node", "dist/main.js"]
