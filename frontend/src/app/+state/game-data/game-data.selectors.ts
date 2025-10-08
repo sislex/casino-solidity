@@ -90,7 +90,7 @@ export const getTimer = createSelector(
     if (activeGameData?.id) {
       const gameTimer = GameDataState.timer.find(timer => timer.gameId === activeGameData.id);
 
-      return gameTimer?.second ?? 0;
+      return gameTimer?.endTime ?? 0;
     }
     return 0;
   }

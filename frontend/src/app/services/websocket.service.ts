@@ -84,10 +84,10 @@ export class WebsocketService {
           }
         });
         this.socket!.on('playing_time', (data) => {
-          this.store.dispatch(setTimer({ gameId: data.gameId, second: data.remainingSeconds, title: 'Time left until the end of the game' }));
+          this.store.dispatch(setTimer({ gameId: data.gameId, second: data.endTimestamp, title: 'Time left until the end of the game' }));
         });
         this.socket!.on('betting_time', (data) => {
-          this.store.dispatch(setTimer({ gameId: data.gameId, second: data.remainingSeconds, title: 'Time left until the end of the betting' }));
+          this.store.dispatch(setTimer({ gameId: data.gameId, second: data.endTimestamp, title: 'Time left until the end of the betting' }));
         });
         this.socket!.emit('connect_game', { gameId: this.gameId, wallet });
       });

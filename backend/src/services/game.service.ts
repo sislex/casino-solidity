@@ -7,82 +7,136 @@ import { Repository } from 'typeorm';
 import { GamePlayers } from '../entities/entities/GamePlayers';
 import { Users } from '../entities/entities/Users';
 import { GameTypes } from '../entities/entities/GameTypes';
-import {ICreateGameData} from "../types/gameData";
-import {IPlayerBlockchain} from "../types/blockchain";
-import {IDataToPay} from "../types/dataToPay";
-import {GameGateway} from "../game/game-websocket";
-import {RockPaperScissorsService} from './games/rock-paper-scissors.service';
-import {GameCommonService} from './game-common.service';
-import {BlockchainService} from './blockchain.service';
-import {DiceService} from './games/dice.service';
-import {ethers} from 'ethers';
+import { ICreateGameData } from '../types/gameData';
+import { IPlayerBlockchain } from '../types/blockchain';
+import { IDataToPay } from '../types/dataToPay';
+import { GameGateway } from '../game/game-websocket';
+import { RockPaperScissorsService } from './games/rock-paper-scissors.service';
+import { GameCommonService } from './game-common.service';
+import { BlockchainService } from './blockchain.service';
+import { DiceService } from './games/dice.service';
+import { ethers } from 'ethers';
 
 @Injectable()
 export class GameService {
   private contractListeners = new Map<number, any>();
-  private lastSendByGame: Map<number, { note: string; ts: number } | undefined> = new Map();
+  private lastSendByGame: Map<
+    number,
+    { note: string; ts: number } | undefined
+  > = new Map();
 
   constructor(
-      private configService: ConfigService,
-      @InjectRepository(Games)
-      private gameRepository: Repository<Games>,
-      @InjectRepository(GamePlayers)
-      private gamePlayersRepository: Repository<GamePlayers>,
-      @InjectRepository(GameTypes)
-      private gameTypesRepository: Repository<GameTypes>,
-      @InjectRepository(Users)
-      private usersRepository: Repository<Users>,
-      private blockchainService: BlockchainService,
-      private rockPaperScissorsService: RockPaperScissorsService,
-      private diceService: DiceService,
-      private gameCommonService: GameCommonService,
-      private readonly gameGateway: GameGateway
+    private configService: ConfigService,
+    @InjectRepository(Games)
+    private gameRepository: Repository<Games>,
+    @InjectRepository(GamePlayers)
+    private gamePlayersRepository: Repository<GamePlayers>,
+    @InjectRepository(GameTypes)
+    private gameTypesRepository: Repository<GameTypes>,
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
+    private blockchainService: BlockchainService,
+    private rockPaperScissorsService: RockPaperScissorsService,
+    private diceService: DiceService,
+    private gameCommonService: GameCommonService,
+    private readonly gameGateway: GameGateway,
   ) {
-    this.gameGateway._websocketEvents.subscribe(async (data: {event: string, payload: any}) => {
-      if(data.event === 'connect_game') {
-        const getStorageAddress = (await this.getGameById(data.payload.gameId))?.contractAddress;
-        const gameData = await this.gameCommonService.getGameData(data.payload.gameId);
-        if (getStorageAddress) {
-          await this.contractListener(data.payload.gameId, getStorageAddress);
+    this.gameGateway._websocketEvents.subscribe(
+      async (data: { event: string; payload: any }) => {
+        if (data.event === 'connect_game') {
+          const getStorageAddress = (
+            await this.getGameById(data.payload.gameId)
+          )?.contractAddress;
+          const gameData = await this.gameCommonService.getGameData(
+            data.payload.gameId,
+          );
+          if (getStorageAddress) {
+            await this.contractListener(data.payload.gameId, getStorageAddress);
+          }
+          if (gameData.gameInfo.type === 'rock-paper-scissors') {
+            await this.rockPaperScissorsService.sendRpsData(
+              'game_data',
+              'first_send',
+              gameData,
+              data.payload.gameId,
+            );
+          } else if (gameData.gameInfo.type === 'dice') {
+            await this.diceService.sendDiceData(
+              'game_data',
+              'first_send',
+              gameData,
+              data.payload.gameId,
+              {},
+            );
+          }
+          await this.gameCommonService.resendEndTimes(data.payload.gameId);
+        } else if (data.event === 'handleConnection') {
+          console.log('handleConnection');
+        } else if (data.event === 'join_game') {
+          await this.addWalletToGame(data.payload.gameId, data.payload.wallet);
+          const gameDataBeforeDeploy = await this.gameCommonService.getGameData(
+            data.payload.gameId,
+          );
+          if (gameDataBeforeDeploy.gameInfo.type === 'rock-paper-scissors') {
+            await this.rockPaperScissorsService.sendRpsData(
+              'game_data',
+              'before_deploy',
+              gameDataBeforeDeploy,
+              data.payload.gameId,
+            );
+            await this.checkEverythingIsReady(
+              gameDataBeforeDeploy.gameInfo.bet.toString(),
+              data.payload.gameId,
+            );
+            const gameData = await this.gameCommonService.getGameData(
+              data.payload.gameId,
+            );
+            await this.rockPaperScissorsService.sendRpsData(
+              'game_data',
+              'after_deploy',
+              gameData,
+              data.payload.gameId,
+            );
+          } else if (gameDataBeforeDeploy.gameInfo.type === 'dice') {
+            await this.diceService.sendDiceData(
+              'game_data',
+              'before_deploy',
+              gameDataBeforeDeploy,
+              data.payload.gameId,
+              null,
+            );
+            await this.checkEverythingIsReady(
+              gameDataBeforeDeploy.gameInfo.bet.toString(),
+              data.payload.gameId,
+            );
+            const gameData = await this.gameCommonService.getGameData(
+              data.payload.gameId,
+            );
+            await this.diceService.sendDiceData(
+              'game_data',
+              'after_deploy',
+              gameData,
+              data.payload.gameId,
+              null,
+            );
+          }
+        } else if (data.event === 'send_money') {
+          await this.sendMoney(data.payload.gameId, data.payload.wallet);
+        } else if (data.event === 'leave_game') {
+          await this.leaveGame({
+            gameId: data.payload.gameId,
+            wallet: data.payload.wallet,
+          });
+          const gameData = await this.gameCommonService.getGameData(
+            data.payload.gameId,
+          );
+          this.gameGateway.send('game_data', gameData, data.payload.gameId);
         }
-        if (gameData.gameInfo.type === 'rock-paper-scissors') {
-          await this.rockPaperScissorsService.sendRpsData('game_data', 'first_send', gameData, data.payload.gameId);
-        } else if (gameData.gameInfo.type === 'dice') {
-          await this.diceService.sendDiceData('game_data', 'first_send', gameData, data.payload.gameId, {});
-        }
-      } else if (data.event === 'handleConnection') {
-        console.log('handleConnection')
-      } else if (data.event === 'join_game') {
-        await this.addWalletToGame(data.payload.gameId, data.payload.wallet);
-        const gameDataBeforeDeploy = await this.gameCommonService.getGameData(data.payload.gameId);
-        if (gameDataBeforeDeploy.gameInfo.type === 'rock-paper-scissors') {
-          await this.rockPaperScissorsService.sendRpsData('game_data', 'before_deploy', gameDataBeforeDeploy, data.payload.gameId);
-          await this.checkEverythingIsReady(gameDataBeforeDeploy.gameInfo.bet.toString(), data.payload.gameId);
-          const gameData = await this.gameCommonService.getGameData(data.payload.gameId);
-          await this.rockPaperScissorsService.sendRpsData('game_data', 'after_deploy', gameData, data.payload.gameId);
-        } else if (gameDataBeforeDeploy.gameInfo.type === 'dice') {
-          await this.diceService.sendDiceData('game_data', 'before_deploy', gameDataBeforeDeploy, data.payload.gameId, null);
-          await this.checkEverythingIsReady(gameDataBeforeDeploy.gameInfo.bet.toString(), data.payload.gameId);
-          const gameData = await this.gameCommonService.getGameData(data.payload.gameId);
-          await this.diceService.sendDiceData('game_data', 'after_deploy', gameData, data.payload.gameId, null);
-        }
-
-      } else if (data.event === 'send_money') {
-        await this.sendMoney(data.payload.gameId, data.payload.wallet);
-      } else if (data.event === 'leave_game') {
-        await this.leaveGame({
-          gameId: data.payload.gameId,
-          wallet: data.payload.wallet
-        });
-        const gameData = await this.gameCommonService.getGameData(data.payload.gameId);
-        this.gameGateway.send('game_data', gameData, data.payload.gameId)
-      }
-    })
+      },
+    );
   }
 
   async createGame(data: ICreateGameData): Promise<Games> {
-
-
     const gameDto: GameDto = {
       type: data.type || '',
       ownerAddress: this.configService.get<string>('OWNER_ADDRESS') as string,
@@ -119,9 +173,9 @@ export class GameService {
   }
 
   private async modifyGamePlayers(
-      action: 'add' | 'remove',
-      gameId: number,
-      wallet: string
+    action: 'add' | 'remove',
+    gameId: number,
+    wallet: string,
   ): Promise<{ wallet: string }> {
     const game = await this.gameRepository.findOne({ where: { id: gameId } });
     if (!game) throw new Error('Game not found');
@@ -130,7 +184,7 @@ export class GameService {
     if (!user) throw new Error('User not found for the provided wallet');
 
     const existingPlayer = await this.gamePlayersRepository.findOne({
-      where: { gameId, userId: user.id }
+      where: { gameId, userId: user.id },
     });
 
     if (action === 'add') {
@@ -178,9 +232,8 @@ export class GameService {
     }
 
     return games.map((game) => {
-      const isPlayerJoined = game.gamePlayers?.some(
-          (p) => p.wallet === playerWallet,
-      ) ?? false;
+      const isPlayerJoined =
+        game.gamePlayers?.some((p) => p.wallet === playerWallet) ?? false;
 
       return {
         id: game.id,
@@ -199,12 +252,8 @@ export class GameService {
     });
   }
 
-
   async areAllPlayersJoined(gameId: number): Promise<boolean> {
-
-    const game = await this.gameCommonService.getGameDataById(
-        gameId,
-    );
+    const game = await this.gameCommonService.getGameDataById(gameId);
 
     if (!game) {
       throw new Error(`Game with ID ${gameId} not found`);
@@ -217,8 +266,8 @@ export class GameService {
   }
 
   async updateContractAddress(
-      gameId: number,
-      contractAddress: string,
+    gameId: number,
+    contractAddress: string,
   ): Promise<void> {
     const game = await this.gameRepository.findOne({ where: { id: gameId } });
     if (!game) {
@@ -248,7 +297,7 @@ export class GameService {
     if (game?.type) {
       gameTypeWithAddress = await this.gameTypesRepository.findOne({
         where: { name: game.type },
-        select: ['logicAddress']
+        select: ['logicAddress'],
       });
     }
     return gameTypeWithAddress.logicAddress;
@@ -268,17 +317,20 @@ export class GameService {
       throw new Error(`Game type not set for game ${gameId}`);
     }
 
-    await this.gameTypesRepository.update({ name: game.type }, { logicAddress });
+    await this.gameTypesRepository.update(
+      { name: game.type },
+      { logicAddress },
+    );
   }
 
   async checkEverythingIsReady(bet: any, gameId: number) {
     const betInWei = ethers.parseEther(bet);
 
     const allReady = await this.areAllPlayersJoined(gameId);
-    let logicAddress = await this.getGameLogicAddress(gameId);
+    const logicAddress = await this.getGameLogicAddress(gameId);
     if (allReady) {
       const gamePlayers = await this.getGamePlayers(gameId);
-      const players: IPlayerBlockchain[] = gamePlayers.map(player => ({
+      const players: IPlayerBlockchain[] = gamePlayers.map((player) => ({
         name: player.user?.login || 'Player',
         wallet: player.wallet,
         bet: betInWei.toString(),
@@ -287,24 +339,26 @@ export class GameService {
         result: 0,
       }));
 
-      const contractData = await this.blockchainService.deployGameLogicAddress(logicAddress);
+      const contractData =
+        await this.blockchainService.deployGameLogicAddress(logicAddress);
       await this.setGameLogicAddress(gameId, contractData.logicAddress);
       const bettingTime = 5000 * 60;
       const playingTime = 30000 * 60;
-      const storageAddress = await this.blockchainService.deployGameStorageAddress(
+      const storageAddress =
+        await this.blockchainService.deployGameStorageAddress(
           players,
           bettingTime,
           playingTime,
           contractData.logicAddress,
-      );
-      await this.startTimer('betting_time', bettingTime, gameId);
+        );
+      await this.gameCommonService.sendEndTime('betting_time', bettingTime, gameId);
       await this.updateContractAddress(gameId, storageAddress);
       await this.contractListener(gameId, storageAddress);
     }
   }
 
   async createFirstRound(gameId: number) {
-    const type = (await this.gameCommonService.getGameDataById(gameId)).type
+    const type = (await this.gameCommonService.getGameDataById(gameId)).type;
     if (type === 'rock-paper-scissors') {
       await this.rockPaperScissorsService.createRoundRockPaperScissors(gameId);
     }
@@ -315,28 +369,6 @@ export class GameService {
 
   private timers = new Map<number, NodeJS.Timeout>();
 
-  private async startTimer(note: string, duration: number, gameId: number) {
-    this.stopTimer(gameId);
-
-    let remainingSeconds = duration;
-
-    const intervalId = setInterval(async () => {
-      try {
-        if (remainingSeconds > 0) {
-          remainingSeconds--;
-          await this.sendTimer(note, remainingSeconds, gameId);
-        } else {
-          this.stopTimer(gameId);
-        }
-      } catch (error) {
-        console.error(`Timer error for game ${gameId}:`, error);
-        this.stopTimer(gameId);
-      }
-    }, 1000);
-
-    this.timers.set(gameId, intervalId);
-  }
-
   private stopTimer(gameId: number) {
     const timer = this.timers.get(gameId);
     if (timer) {
@@ -346,8 +378,8 @@ export class GameService {
   }
 
   async sendTimer(note: string, remainingSeconds: number, gameId: number) {
-    let dataTimer = {remainingSeconds, gameId};
-    this.gameGateway.send(note, dataTimer, gameId)
+    const dataTimer = { remainingSeconds, gameId };
+    this.gameGateway.send(note, dataTimer, gameId);
   }
 
   async contractListener(gameId: number, storageAddress: any) {
@@ -357,39 +389,37 @@ export class GameService {
 
     const contract = this.blockchainService.getContract(storageAddress);
 
-    await contract.on("LogBet", async () => {
+    await contract.on('LogBet', async () => {
       await this.sendGameData('player_is_bet', gameId);
-      await this.checkCanBotsPay(gameId)
+      await this.checkCanBotsPay(gameId);
     });
 
-    await contract.once("BettingFinished", async () => {
+    await contract.once('BettingFinished', async () => {
       await this.sendGameData('betting_finished', gameId);
       const playingTime = 30000 * 60;
-      await this.startTimer('playing_time', playingTime, gameId);
+      await this.gameCommonService.sendEndTime('playing_time', playingTime, gameId);
       await this.createFirstRound(gameId);
     });
 
-    await contract.once("GameFinalized", async () => {
+    await contract.once('GameFinalized', async () => {
       this.stopTimer(gameId);
       await this.updateDataBaseFromBlockchain(gameId);
       await this.sendGameData('finish_game_data', gameId);
 
       this.contractListeners.delete(gameId);
-
     });
 
     this.contractListeners.set(gameId, contract);
 
-
-    return contract
+    return contract;
   }
 
   async checkCanBotsPay(gameId: number) {
     const gameData = await this.gameCommonService.getGameData(gameId);
 
     const unpaidWallets = gameData.players
-        .filter(player => !player.bet)
-        .map(player => player.wallet);
+      .filter((player) => !player.bet)
+      .map((player) => player.wallet);
 
     let hasUnpaidRealPlayers = false;
 
@@ -413,21 +443,33 @@ export class GameService {
     }
   }
 
-
   private async sendGameData(note: string, gameId: number) {
     const now = Date.now();
     const last = this.lastSendByGame.get(gameId);
     const debounceMs = note === 'player_is_bet' ? 300 : 0;
-    if (last && last.note === note && debounceMs > 0 && (now - last.ts) < debounceMs) {
+    if (
+      last &&
+      last.note === note &&
+      debounceMs > 0 &&
+      now - last.ts < debounceMs
+    ) {
       return;
     }
     this.lastSendByGame.set(gameId, { note, ts: now });
 
     const gameData = await this.gameCommonService.getGameData(gameId);
     if (gameData.gameInfo.type === 'rock-paper-scissors') {
-      await this.rockPaperScissorsService.sendRpsData('game_data', note, gameData, gameId);
+      await this.rockPaperScissorsService.sendRpsData(
+        'game_data',
+        note,
+        gameData,
+        gameId,
+      );
     } else if (gameData.gameInfo.type === 'dice') {
-      await this.diceService.sendDiceData('game_data', note, gameData, gameId, {activeWallet: null, diceCount:null});
+      await this.diceService.sendDiceData('game_data', note, gameData, gameId, {
+        activeWallet: null,
+        diceCount: null,
+      });
       // await this.diceService.sendDiceData('game_data', note, gameData, gameId, null);
     }
   }
@@ -436,22 +478,24 @@ export class GameService {
     const gameDataById = await this.gameCommonService.getGameDataById(gameId);
 
     if (gameDataById?.contractAddress) {
-      const playerData = await this.blockchainService.getGameData(gameDataById.contractAddress);
+      const playerData = await this.blockchainService.getGameData(
+        gameDataById.contractAddress,
+      );
       await this.gameRepository.update(
-          { id: gameId },
-          { finishedAt: () => "NOW()" }
+        { id: gameId },
+        { finishedAt: () => 'NOW()' },
       );
       if (playerData.players && Array.isArray(playerData.players)) {
         for (const player of playerData.players) {
           const winInEth = ethers.formatEther(player.result.toString());
           await this.gamePlayersRepository.update(
-              {
-                gameId,
-                wallet: player.wallet
-              },
-              {
-                win: Number(winInEth),
-              }
+            {
+              gameId,
+              wallet: player.wallet,
+            },
+            {
+              win: Number(winInEth),
+            },
           );
         }
       }
@@ -468,7 +512,7 @@ export class GameService {
       contractAddress: game?.contractAddress || '',
       contractBet: game?.gameData.bet.toString() || '0',
       privateKey: userData?.encryptedPrivateKey || '',
-    }
+    };
     await this.blockchainService.playerPayment(dataToPay);
   }
 
