@@ -35,12 +35,11 @@
             </strong>
           </span>
         }
-
+        @if (result !== null) {
         <span>
           Winner: <strong>{{ (selectNameWinner$ | async) || 'Is determined' }}</strong>
         </span>
 
-        @if (result !== null) {
           <span>
             Your result: <strong>{{ result }}</strong>
           </span>

@@ -367,21 +367,6 @@ export class GameService {
     }
   }
 
-  private timers = new Map<number, NodeJS.Timeout>();
-
-  private stopTimer(gameId: number) {
-    const timer = this.timers.get(gameId);
-    if (timer) {
-      clearInterval(timer);
-      this.timers.delete(gameId);
-    }
-  }
-
-  async sendTimer(note: string, remainingSeconds: number, gameId: number) {
-    const dataTimer = { remainingSeconds, gameId };
-    this.gameGateway.send(note, dataTimer, gameId);
-  }
-
   async contractListener(gameId: number, storageAddress: any) {
     if (this.contractListeners.has(gameId)) {
       return this.contractListeners.get(gameId);
@@ -402,7 +387,6 @@ export class GameService {
     });
 
     await contract.once('GameFinalized', async () => {
-      this.stopTimer(gameId);
       await this.updateDataBaseFromBlockchain(gameId);
       await this.sendGameData('finish_game_data', gameId);
 

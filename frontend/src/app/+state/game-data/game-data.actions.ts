@@ -81,6 +81,10 @@ export const setGameData = createAction(
   '[GameData] setGameData',
   props<{data: any}>()
 );
+export const setFinished = createAction(
+  '[GameData] setFinished',
+  props<{finished: boolean}>()
+);
 export const gameError = createAction(
   '[GameData] gameError',
   props<{error: any}>()

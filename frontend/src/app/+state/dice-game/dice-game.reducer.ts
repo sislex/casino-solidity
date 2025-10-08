@@ -64,7 +64,8 @@ export const initialState: DiceGameState = {
     orderOfThrows: {
       activeWallet: '',
       diceCounts: [0, 0],
-    }
+    },
+    finishedPopup: false,
   },
 };
 

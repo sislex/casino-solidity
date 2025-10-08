@@ -1,6 +1,11 @@
 @if ((selectActiveGameData$ | async)?.status === 'Waiting payment' || (selectActiveGameData$ | async)?.status === 'notStarted') {
   <app-players-status-table-container></app-players-status-table-container>
 }
+@if ((selectActiveGameData$ | async)?.finishedPopup) {
+  <app-loader
+    [title]="'Your winnings are being calculated — please wait...'"
+  ></app-loader>
+}
 @if ((selectActiveGameData$ | async)?.status === 'Game') {
   <app-statistic-button
     [roundsViewData]="roundsViewData$ | async"

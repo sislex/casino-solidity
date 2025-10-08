@@ -18,6 +18,7 @@ import {
   selectDiceDataRound,
   selectDiceRoundsViewData
 } from '../../+state/dice-game/dice-game.selectors';
+import {LoaderComponent} from '../../components/loader/loader.component';
 
 @Component({
   selector: 'app-game-dice',
@@ -29,7 +30,8 @@ import {
     RoundsStatisticsComponent,
     StatisticButtonComponent,
     WinnerComponent,
-    RockPaperScissorsComponent
+    RockPaperScissorsComponent,
+    LoaderComponent
   ],
   standalone: true,
   templateUrl: './game-dice.component.html',

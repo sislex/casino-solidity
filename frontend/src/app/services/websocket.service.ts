@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import {environment} from '../../environments/environment';
-import {setGameData, setTimer} from '../+state/game-data/game-data.actions';
+import {setFinished, setGameData, setTimer} from '../+state/game-data/game-data.actions';
 import {Store} from '@ngrx/store';
 import {ResultsContainerComponent} from '../containers/results-container/results-container.component';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -79,6 +79,11 @@ export class WebsocketService {
             this.store.dispatch(resetActiveGameElements());
           } else if (data.sendNote === 'finish_game_data') {
             this.store.dispatch(setGameData({ data }));
+            if (data.gameData.gameInfo.finishedAt === null) {
+              this.store.dispatch(setFinished({finished: true}));
+            } else {
+              this.store.dispatch(setFinished({finished: false}));
+            }
             this.store.dispatch(setTimer({ gameId: data.gameData.gameInfo.gameId, second: 0, title: '' }));
             this.openFinishedModal();
           }

@@ -61,6 +61,7 @@ export interface IActiveGameList {
   playersNumber: number;
   playerNumberSet: number;
   players: IPlayers[];
+  finishedPopup: boolean;
 }
 
 export interface IDataGameList {
@@ -225,7 +226,8 @@ export const initialState: GameDataState = {
     bet: 0,
     playersNumber: 0,
     playerNumberSet: 0,
-    players: []
+    players: [],
+    finishedPopup: false,
   },
   timer: [],
   createGameAPI: {
@@ -317,6 +319,7 @@ export const gameDataReducer = createReducer(
     return {
       ...state,
       activeGameData: {
+        ...state.activeGameData,
         id: gameInfo.id,
         type: gameInfo.type,
         status: gameInfo.status,
@@ -387,6 +390,13 @@ export const gameDataReducer = createReducer(
       isLoaded: true,
       loadingTime: Date.now() - state.paymentGameAPI.startTime!,
       response
+    }
+  })),
+  on(GameDataActions.setFinished, (state, {finished}) => ({
+    ...state,
+    activeGameData: {
+      ...state.activeGameData,
+      finishedPopup: finished,
     }
   })),
 );

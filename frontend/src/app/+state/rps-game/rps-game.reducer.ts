@@ -65,6 +65,7 @@ export const initialState: RpsGameState = {
     players: [],
     activeRound: null,
     roundsData: [],
+    finishedPopup: false,
   },
   gameElements: [
     {
