@@ -46,7 +46,7 @@
           <button class="footer-button" mat-raised-button [disabled]="!(gameData.status === 'notStarted')" (click)="event('observe')">Отключиться и остаться</button>
           <button class="footer-button" mat-raised-button [disabled]="!(gameData.status === 'notStarted')" (click)="event('leave')">Отключится и покинуть</button>
         } @else {
-          <button class="footer-button" mat-raised-button [disabled]="(gameData.playersNumber === gameData.playerNumberSet)" (click)="event('connect')">Подключится к игре</button>
+          <button class="footer-button" mat-raised-button [disabled]="(gameData.playersNumber === gameData.playerNumberSet)" (click)="event('connect')">Подключиться к игре</button>
         }
       }
     </div>
