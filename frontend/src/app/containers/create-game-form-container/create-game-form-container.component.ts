@@ -3,12 +3,15 @@ import {CreateGameFormComponent} from '../../components/create-game-form/create-
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Store} from '@ngrx/store';
 import {createGame} from '../../+state/game-data/game-data.actions';
+import {AsyncPipe} from '@angular/common';
+import {getBalanceData} from '../../+state/game-data/game-data.selectors';
 
 @Component({
   selector: 'app-create-game-form-container',
-  imports: [
-    CreateGameFormComponent,
-  ],
+    imports: [
+        CreateGameFormComponent,
+        AsyncPipe,
+    ],
   standalone: true,
   templateUrl: './create-game-form-container.component.html',
   styleUrl: './create-game-form-container.component.scss'
@@ -18,6 +21,8 @@ export class CreateGameFormContainerComponent implements OnInit {
   private store = inject(Store);
 
   private gameType = '';
+
+  getBalanceData$ = this.store.select(getBalanceData);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { gameType: string }) {}
 

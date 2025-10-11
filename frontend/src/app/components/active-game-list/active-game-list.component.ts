@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { GameReloadService } from '../../services/game-reload.service';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-active-game-list',
@@ -10,7 +11,8 @@ import { GameReloadService } from '../../services/game-reload.service';
   imports: [
     MatButtonModule,
     MatDividerModule,
-    MatIconModule
+    MatIconModule,
+    AsyncPipe
   ],
   templateUrl: './active-game-list.component.html',
   styleUrl: './active-game-list.component.scss'

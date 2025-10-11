@@ -3,7 +3,7 @@
     <div class="tool">
 
       <span class="login">
-        Create Game
+        Создание игры
       </span>
 
       <span class="example-spacer"></span>
@@ -16,7 +16,11 @@
 
     </div>
 
-    <app-create-game-form (emitter)="events($event)"></app-create-game-form>
+    <app-create-game-form
+      [balanceData]="(getBalanceData$ | async)!"
+      (emitter)="events($event)">
+
+    </app-create-game-form>
 
   </div>
 </div>

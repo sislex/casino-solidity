@@ -71,19 +71,19 @@ export const initialState: RpsGameState = {
     {
       icon: 'sports_mma',
       check: null,
-      name: 'Rock',
+      name: 'Камень',
       eventText: '1',
     },
     {
       icon: 'content_cut',
       check: null,
-      name: 'Scissors',
+      name: 'Ножницы',
       eventText: '2',
     },
     {
       icon: 'insert_drive_file',
       check: null,
-      name: 'Paper',
+      name: 'Бумага',
       eventText: '3',
     },
   ],

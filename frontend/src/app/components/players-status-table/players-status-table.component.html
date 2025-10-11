@@ -2,9 +2,9 @@
   <thead>
   <tr>
     <th>№</th>
-    <th>Player</th>
-    <th>Bet</th>
-    <th>Ready</th>
+    <th>Игроков</th>
+    <th>Ставка</th>
+    <th>Готовность</th>
   </tr>
   </thead>
   <tbody>
@@ -13,7 +13,12 @@
         <td>{{ $index + 1 }}</td>
         <td>{{ item.wallet}}</td>
         <td>
-          {{ item.bet }}
+          @if (item.bet) {
+            <mat-icon>check</mat-icon>
+          } @else {
+            <mat-icon class="no-bet">clear</mat-icon>
+          }
+
         </td>
         <td>
           @if (item.bet) {

@@ -140,7 +140,7 @@ export const initialState: GameDataState = {
         'content_cut',
         'description'
       ],
-      title: 'Rock-Paper-Scissors',
+      title: 'Камень-Ножницы-Бумага',
       linkGame: 'rock-paper-scissors',
       readyStatus: true,
     },
@@ -148,7 +148,7 @@ export const initialState: GameDataState = {
       iconList: [
         'casino'
       ],
-      title: 'Dice',
+      title: 'Кости',
       linkGame: 'dice',
       readyStatus: true,
     },
@@ -156,7 +156,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'roulette'
       ],
-      title: 'Roulette',
+      title: 'Рулетка',
       linkGame: 'roulette',
       readyStatus: false,
     },
@@ -164,7 +164,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'slots'
       ],
-      title: 'Slots',
+      title: 'Слоты',
       linkGame: 'slots',
       readyStatus: false,
     },
@@ -172,7 +172,7 @@ export const initialState: GameDataState = {
       iconList: [
         'style'
       ],
-      title: 'Blackjack',
+      title: 'Блэкджек',
       linkGame: 'blackjack',
       readyStatus: false,
     },
@@ -180,7 +180,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'bingo'
       ],
-      title: 'bingo',
+      title: 'Бинго',
       linkGame: 'bingo',
       readyStatus: false,
     },
@@ -188,7 +188,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'poker'
       ],
-      title: 'Poker',
+      title: 'Покер',
       linkGame: 'poker',
       readyStatus: false,
     },
@@ -196,7 +196,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'heads-and-tails'
       ],
-      title: 'Heads-And-Tails',
+      title: 'Орел и решка',
       linkGame: 'heads-and-tails',
       readyStatus: false,
     }

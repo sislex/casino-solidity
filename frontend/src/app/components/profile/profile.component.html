@@ -7,7 +7,7 @@
   <mat-card-content>
     @if (user?.wallet) {
       <div class="container-balance-reload">
-        <span class="title-balance">Balance:</span>
+        <span class="title-balance">Баланс:</span>
         <span class="example-spacer"></span>
         <button mat-icon-button class="toggle" (click)="reloadBalance()">
           <mat-icon>replay</mat-icon>
@@ -16,7 +16,7 @@
       {{ balanceData.balance }}
       {{ balanceData.nameToken }}
     } @else {
-      No Wallet. You want create new wallet?
+      Нет кошелька. Хотите создать новый кошелек?
     }
   </mat-card-content>
 </mat-card>
