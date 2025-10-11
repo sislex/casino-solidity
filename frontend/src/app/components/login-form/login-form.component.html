@@ -3,7 +3,7 @@
     <mat-label></mat-label>
     <input
       matInput
-      placeholder="Login"
+      placeholder="Логин"
       [(ngModel)]="login"
       form="myForm"
       autocomplete="username"
@@ -15,7 +15,7 @@
     <mat-label></mat-label>
     <input
       matInput
-      placeholder="Password"
+      placeholder="Пароль"
       type="password"
       [(ngModel)]="password"
       form="myForm"
@@ -23,11 +23,11 @@
     >
   </mat-form-field>
 </div>
-<div (click)="checkPass()" class="check-pass"> <span>Forgot your password?</span> </div>
-<app-register-button [label]="'Login'" (click)="onLogin()"></app-register-button>
+<div (click)="checkPass()" class="check-pass"> <span>Забыли пароль?</span> </div>
+<app-register-button [label]="'Логин'" (click)="onLogin()"></app-register-button>
 <div class="new-gamer">
-  <span>Newbie? </span>
-  <span (click)="registration()" class="create">Create account</span>
+  <span>Нет аккаунта? </span>
+  <span (click)="registration()" class="create">Зарегистрироваться</span>
 </div>
 <form id="myForm"></form>
 
