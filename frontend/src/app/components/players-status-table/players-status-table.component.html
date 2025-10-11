@@ -11,9 +11,13 @@
     @for (item of data; track item.wallet) {
       <tr>
         <td>{{ $index + 1 }}</td>
-        <td>{{ item.wallet}}</td>
+        <td>{{ item.name}}</td>
         <td>
-          {{ item.bet }}
+          @if (item.bet) {
+            <mat-icon>check</mat-icon>
+          } @else {
+            <mat-icon class="no-bet">clear</mat-icon>
+          }
         </td>
         <td>
           @if (item.bet) {
