@@ -10,7 +10,7 @@ import {IGameDataBlockchain, IPlayerBlockchain} from "../types/blockchain";
 export class BlockchainService {
 
     private provider = new ethers.JsonRpcProvider(process.env.INFURA_URL);
-    private providerToEvents = new ethers.WebSocketProvider('wss://sepolia.infura.io/ws/v3/6113828fd8e8448f9a9e3fa7962e2cc6');
+    private providerToEvents = new ethers.WebSocketProvider('wss://sepolia.infura.io/ws/v3/8205c522bcda4efb89497a065e8a6e04');
     private contract: ethers.Contract | null = null;
     private readonly wallet: ethers.Wallet;
     private readonly logicArtifactPath = path.resolve(
