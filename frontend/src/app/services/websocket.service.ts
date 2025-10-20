@@ -108,8 +108,8 @@ export class WebsocketService {
     }
 
     this.resultsDialogRef = this.dialog.open(ResultsContainerComponent, {
-      width: '30%',
-      height: '30%',
+      width: '600px',
+      height: '300px',
       hasBackdrop: true,
     });
 

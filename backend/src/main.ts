@@ -26,4 +26,13 @@ async function bootstrap() {
   console.log(`Server started on http://localhost:${port}`);
 }
 
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err.message);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled Rejection:', reason);
+});
+
+
 bootstrap();
