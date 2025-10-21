@@ -4,7 +4,9 @@
 import type {
   BaseContract,
   BigNumberish,
+  BytesLike,
   FunctionFragment,
+  Result,
   Interface,
   EventFragment,
   AddressLike,
@@ -18,12 +20,35 @@ import type {
   TypedEventLog,
   TypedLogDescription,
   TypedListener,
+  TypedContractMethod,
 } from "../common";
 
 export interface GameBaseInterface extends Interface {
+  getFunction(
+    nameOrSignature: "refundAfterBettingDeadline" | "refundAfterGameDeadline"
+  ): FunctionFragment;
+
   getEvent(
     nameOrSignatureOrTopic: "BettingFinished" | "GameFinalized" | "LogBet"
   ): EventFragment;
+
+  encodeFunctionData(
+    functionFragment: "refundAfterBettingDeadline",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "refundAfterGameDeadline",
+    values?: undefined
+  ): string;
+
+  decodeFunctionResult(
+    functionFragment: "refundAfterBettingDeadline",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "refundAfterGameDeadline",
+    data: BytesLike
+  ): Result;
 }
 
 export namespace BettingFinishedEvent {
@@ -109,9 +134,20 @@ export interface GameBase extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  refundAfterBettingDeadline: TypedContractMethod<[], [void], "nonpayable">;
+
+  refundAfterGameDeadline: TypedContractMethod<[], [void], "nonpayable">;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
+
+  getFunction(
+    nameOrSignature: "refundAfterBettingDeadline"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "refundAfterGameDeadline"
+  ): TypedContractMethod<[], [void], "nonpayable">;
 
   getEvent(
     key: "BettingFinished"

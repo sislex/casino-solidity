@@ -339,11 +339,11 @@ export class GameService {
         result: 0,
       }));
 
-      const contractData =
-        await this.blockchainService.deployGameLogicAddress(logicAddress);
+      const contractData = await this.blockchainService.deployGameLogicAddress(logicAddress);
+
       await this.setGameLogicAddress(gameId, contractData.logicAddress);
-      const bettingTime = 5000 * 60;
-      const playingTime = 30000 * 60;
+      const bettingTime = 10000 * 60;
+      const playingTime = 60000 * 60;
       const storageAddress =
         await this.blockchainService.deployGameStorageAddress(
           players,

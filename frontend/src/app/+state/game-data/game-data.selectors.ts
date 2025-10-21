@@ -74,9 +74,14 @@ export const selectNameWinner = createSelector(
       return currentWin > prevWin ? current : prev;
     }, players[0]);
 
-    return winner.name;
+    const allEqual = players.every(
+      (p) => (p.win ?? 0) === (winner.win ?? 0)
+    );
+
+    return allEqual ? "Ничья" : winner.name;
   }
 );
+
 
 export const selectGameTypes = createSelector(
   selectGameDataState,

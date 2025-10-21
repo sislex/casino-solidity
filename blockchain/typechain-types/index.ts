@@ -24,8 +24,6 @@ export type { SafeERC20 } from "./@openzeppelin/contracts/token/ERC20/utils/Safe
 export { SafeERC20__factory } from "./factories/@openzeppelin/contracts/token/ERC20/utils/SafeERC20__factory";
 export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
-export type { ReentrancyGuard } from "./@openzeppelin/contracts/utils/ReentrancyGuard";
-export { ReentrancyGuard__factory } from "./factories/@openzeppelin/contracts/utils/ReentrancyGuard__factory";
 export type { DelegateCallGameStorage } from "./contracts/Game.sol/DelegateCallGameStorage";
 export { DelegateCallGameStorage__factory } from "./factories/contracts/Game.sol/DelegateCallGameStorage__factory";
 export type { GameBase } from "./contracts/GameBase";

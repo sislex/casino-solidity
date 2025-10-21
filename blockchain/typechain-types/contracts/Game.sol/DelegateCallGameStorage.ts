@@ -71,6 +71,8 @@ export interface DelegateCallGameStorageInterface extends Interface {
       | "getGameData"
       | "getPlayer"
       | "isFinished"
+      | "refundAfterBettingDeadline"
+      | "refundAfterGameDeadline"
       | "withdrawRemainingBalance"
   ): FunctionFragment;
 
@@ -105,6 +107,14 @@ export interface DelegateCallGameStorageInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "refundAfterBettingDeadline",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "refundAfterGameDeadline",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawRemainingBalance",
     values?: undefined
   ): string;
@@ -126,6 +136,14 @@ export interface DelegateCallGameStorageInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "getPlayer", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isFinished", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "refundAfterBettingDeadline",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "refundAfterGameDeadline",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "withdrawRemainingBalance",
     data: BytesLike
@@ -267,6 +285,10 @@ export interface DelegateCallGameStorage extends BaseContract {
 
   isFinished: TypedContractMethod<[], [boolean], "view">;
 
+  refundAfterBettingDeadline: TypedContractMethod<[], [void], "nonpayable">;
+
+  refundAfterGameDeadline: TypedContractMethod<[], [void], "nonpayable">;
+
   withdrawRemainingBalance: TypedContractMethod<[], [void], "nonpayable">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
@@ -333,6 +355,12 @@ export interface DelegateCallGameStorage extends BaseContract {
   getFunction(
     nameOrSignature: "isFinished"
   ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "refundAfterBettingDeadline"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "refundAfterGameDeadline"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "withdrawRemainingBalance"
   ): TypedContractMethod<[], [void], "nonpayable">;

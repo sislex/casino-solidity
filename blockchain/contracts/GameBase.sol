@@ -165,8 +165,37 @@ contract GameBase {
     gameNotFinished
     bettingCompleted
     gameNotAborted
-    gameTimeNotExceeded
     {
+        require(isBettingComplete, "Betting not completed yet");
+
+        // Проверяем, вышло ли время игры
+        if (block.timestamp > startedAt + gameMaxTime) {
+            // Время вышло — делаем возврат ставок с комиссией
+            isGameAborted = true;
+
+            for (uint256 i = 0; i < playerList.length; i++) {
+                Player storage player = playerList[i];
+                if (player.isPaid && !player.isPaidOut) {
+                    uint256 payout = (player.bet * 98) / 100; // 2% комиссия
+                    uint256 commission = player.bet - payout;
+
+                    if (payout > 0) {
+                        gameToken.safeTransfer(player.wallet, payout);
+                        player.result = payout;
+                    }
+
+                    player.isPaidOut = true;
+                }
+            }
+
+            _withdrawRemainingBalance(); // оставшиеся токены (комиссия) владельцу
+            isGameFinished = true;
+            finishedAt = block.timestamp;
+            emit GameFinalized(block.timestamp);
+            return;
+        }
+
+        // Если время ещё не вышло — обычный расчет победителей
         uint256 balance = gameToken.balanceOf(address(this));
 
         address[] memory wallets = new address[](_playerResultList.length);
@@ -193,9 +222,7 @@ contract GameBase {
             address recipient = wallets[i];
             uint256 amount = payouts[i];
             if (amount > 0) {
-                // безопасный вызов трансфера токенов
                 gameToken.safeTransfer(recipient, amount);
-
                 uint256 idx = playerMap[recipient];
                 playerList[idx].result = amount;
                 playerList[idx].isPaidOut = true;
@@ -206,23 +233,40 @@ contract GameBase {
         if (remaining > 0) {
             gameToken.safeTransfer(owner, remaining);
         }
+
         isGameFinished = true;
         finishedAt = block.timestamp;
         emit GameFinalized(block.timestamp);
     }
 
     // Игрок вызывает deposit() после approve(token, contract, bet)
-    function _deposit() internal playerExistMsgSender bettingNotCompleted bettingTimeNotFinished gameNotAborted gameNotFinished {
-        uint256 idx = playerMap[msg.sender];
+    function _deposit() internal playerExistMsgSender bettingNotCompleted gameNotAborted gameNotFinished {
+        if (block.timestamp > createdAt + bettingMaxTime) {
+            _refundAllPaid();
+            emit GameFinalized(block.timestamp);
+            return;
+        }
+
+
+    uint256 idx = playerMap[msg.sender];
         Player storage player = playerList[idx];
         require(!player.isPaid, "Already paid");
 
-        // transferFrom (через SafeERC20)
         gameToken.safeTransferFrom(msg.sender, address(this), player.bet);
-
         player.isPaid = true;
         _updateBettingStatus();
         emit LogBet(msg.sender, player.name, player.bet);
+    }
+
+    function _refundAllPaid() internal {
+        isGameAborted = true;
+        for (uint256 i = 0; i < playerList.length; i++) {
+            if (playerList[i].isPaid && !playerList[i].isPaidOut) {
+                gameToken.safeTransfer(playerList[i].wallet, playerList[i].bet);
+                playerList[i].isPaidOut = true;
+            }
+        }
+        _withdrawRemainingBalance();
     }
 
     function _getPlayer(uint256 index) internal view returns (Player memory) {
@@ -283,7 +327,7 @@ contract GameBase {
         return gameToken.balanceOf(address(this));
     }
 
-    function _withdrawRemainingBalance() internal onlyOwner {
+    function _withdrawRemainingBalance() internal {
         uint256 balance = gameToken.balanceOf(address(this));
         if (balance > 0) {
             gameToken.safeTransfer(owner, balance);
@@ -302,4 +346,47 @@ contract GameBase {
 
         _withdrawRemainingBalance();
     }
+
+    function refundAfterBettingDeadline() external onlyOwner gameNotFinished gameNotAborted {
+        require(block.timestamp > createdAt + bettingMaxTime, "Betting time not yet over");
+
+        isGameAborted = true;
+
+        for (uint256 i = 0; i < playerList.length; i++) {
+            if (playerList[i].isPaid && !playerList[i].isPaidOut) {
+                gameToken.safeTransfer(playerList[i].wallet, playerList[i].bet);
+                playerList[i].isPaidOut = true;
+            }
+        }
+
+        _withdrawRemainingBalance();
+    }
+
+    function refundAfterGameDeadline() external onlyOwner gameNotFinished gameNotAborted {
+        require(block.timestamp > startedAt + gameMaxTime, "Game time not yet over");
+
+        isGameAborted = true;
+
+        uint256 contractBalance = gameToken.balanceOf(address(this));
+
+        for (uint256 i = 0; i < playerList.length; i++) {
+            Player storage player = playerList[i];
+            if (player.isPaid && !player.isPaidOut) {
+                // Вычисляем выплату за вычетом 2% комиссии
+                uint256 payout = (player.bet * 98) / 100; // 2% комиссия
+                uint256 commission = player.bet - payout;
+
+                if (payout > 0) {
+                    gameToken.safeTransfer(player.wallet, payout);
+                    player.result = payout;
+                }
+
+                player.isPaidOut = true;
+            }
+        }
+
+        // Все оставшиеся токены (например, комиссии) переводим владельцу
+        _withdrawRemainingBalance();
+    }
+
 }

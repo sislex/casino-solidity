@@ -14,8 +14,7 @@ export class BlockchainService {
     private contract: ethers.Contract | null = null;
     private readonly wallet: ethers.Wallet;
     private readonly logicArtifactPath = path.resolve(
-        __dirname,
-        '../blockchain/contracts/GameLogic.sol/GameLogic.json',
+        './src/blockchain/contracts/GameLogic.sol/GameLogic.json',
     );
     private readonly storageArtifactPath = path.resolve(
         __dirname,
@@ -37,24 +36,25 @@ export class BlockchainService {
     }
 
     async deployGameLogicAddress(logicAddress: any) {
-        if (!logicAddress) {
-            const logicArtifact = JSON.parse(
-                fs.readFileSync(this.logicArtifactPath, 'utf8'),
-            );
-            const GameLogicFactory = new ethers.ContractFactory(
-                logicArtifact.abi,
-                logicArtifact.bytecode,
-                this.wallet,
-            );
-            const logicContract = await GameLogicFactory.deploy();
-            await logicContract.waitForDeployment();
-            logicAddress = await logicContract.getAddress();
-        }
+        try {
+            if (!logicAddress) {
+                const logicArtifact = JSON.parse(fs.readFileSync(this.logicArtifactPath, 'utf8'));
+                const GameLogicFactory = new ethers.ContractFactory(
+                    logicArtifact.abi,
+                    logicArtifact.bytecode,
+                    this.wallet,
+                );
 
-        return {
-            logicAddress
+                const logicContract = await GameLogicFactory.deploy();
+                await logicContract.waitForDeployment();
+                logicAddress = await logicContract.getAddress();
+            }
+            return { logicAddress };
+        } catch (err) {
+            throw err;
         }
     }
+
 
     async deployGameStorageAddress(
         players: IPlayerBlockchain[],
@@ -72,11 +72,15 @@ export class BlockchainService {
             this.wallet,
         );
         const tokenAddress = process.env.TOKEN_ADDRESS;
+
+        const startTime = time1 / 1000;
+        const endTime = time2  / 1000;
+
         const contract = await DelegateCallGameStorageFactory.deploy(
             players,
             logicAddress,
-            time1,
-            time2,
+            startTime,
+            endTime,
             tokenAddress,
         );
 
@@ -190,8 +194,6 @@ export class BlockchainService {
             delete this.paymentLocks[contractAddress];
         }
     }
-
-
 
     getContract(contractAddress: string) {
         const contract = new ethers.Contract(
