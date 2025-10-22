@@ -5,13 +5,15 @@ import * as bcrypt from 'bcrypt';
 import { RegistrationDto } from '../dto/registration.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Users } from '../entities/entities/Users';
+import {BlockchainService} from './blockchain.service';
 
 @Injectable()
 export class RegistrationService {
   constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
-    private jwtService: JwtService,
+      @InjectRepository(Users)
+      private usersRepository: Repository<Users>,
+      private jwtService: JwtService,
+      private blockchainService: BlockchainService,
   ) {}
 
   async createUser(registrationDto: RegistrationDto): Promise<Users> {
@@ -27,8 +29,12 @@ export class RegistrationService {
       encryptedPrivateKey,
     });
 
+    await this.blockchainService.sendStartTokens(wallet!);
+
     return this.usersRepository.save(user);
   }
+
+
 
   async validateUser(registrationDto: RegistrationDto): Promise<{
     token: string;
