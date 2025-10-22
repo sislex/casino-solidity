@@ -16,6 +16,7 @@ import { GameCommonService } from './game-common.service';
 import { BlockchainService } from './blockchain.service';
 import { DiceService } from './games/dice.service';
 import { ethers } from 'ethers';
+import { MoreThan, LessThan, IsNull, Not } from 'typeorm';
 
 @Injectable()
 export class GameService {
@@ -207,8 +208,13 @@ export class GameService {
   }
 
   async getGamesByTypeWithPlayerFlag(type: string, playerWallet: string) {
+    const now = new Date(); // текущее время
+
     const games = await this.gameRepository.find({
-      where: { type },
+      where: [
+        { type, endGameTime: MoreThan(now) }, // ставки ещё идут
+        { type, endGameTime: LessThan(now), finishedAt: Not(IsNull()) }, // ставки закончились, игра завершена
+      ],
       relations: ['gameData', 'gamePlayers'],
       select: {
         id: true,
@@ -218,6 +224,8 @@ export class GameService {
         finishedAt: true,
         createdAt: true,
         updatedAt: true,
+        endBettingTime: true,
+        endGameTime: true,
         gameData: {
           bet: true,
           playersNumber: true,
@@ -227,13 +235,10 @@ export class GameService {
       },
     });
 
-    if (!games.length) {
-      return [];
-    }
+    if (!games.length) return [];
 
     return games.map((game) => {
-      const isPlayerJoined =
-        game.gamePlayers?.some((p) => p.wallet === playerWallet) ?? false;
+      const isPlayerJoined = game.gamePlayers?.some((p) => p.wallet === playerWallet) ?? false;
 
       return {
         id: game.id,
@@ -243,6 +248,8 @@ export class GameService {
         finishedAt: game.finishedAt,
         createdAt: game.createdAt,
         updatedAt: game.updatedAt,
+        endGameTime: game.endGameTime,
+        endBettingTime: game.endBettingTime,
         bet: game.gameData?.bet,
         playersNumber: game.gameData?.playersNumber,
         playerNumberSet: game.gameData?.playerNumberSet,
@@ -252,7 +259,8 @@ export class GameService {
     });
   }
 
-  async areAllPlayersJoined(gameId: number): Promise<boolean> {
+
+async areAllPlayersJoined(gameId: number): Promise<boolean> {
     const game = await this.gameCommonService.getGameDataById(gameId);
 
     if (!game) {
@@ -265,17 +273,20 @@ export class GameService {
     return playerNumberSet === playersNumber;
   }
 
-  async updateContractAddress(
+  async updateContractDeployData(
     gameId: number,
     contractAddress: string,
+    endBettingTime: Date,
+    endGameTime: Date,
   ): Promise<void> {
     const game = await this.gameRepository.findOne({ where: { id: gameId } });
     if (!game) {
       throw new Error(`Game with ID ${gameId} not found`);
     }
 
-    await this.gameRepository.update({ id: gameId }, { contractAddress });
+    await this.gameRepository.update({ id: gameId }, { contractAddress, endBettingTime, endGameTime });
   }
+
 
   getGameTypes() {
     return this.gameTypesRepository.find();
@@ -300,6 +311,7 @@ export class GameService {
         select: ['logicAddress'],
       });
     }
+
     return gameTypeWithAddress.logicAddress;
   }
 
@@ -324,9 +336,11 @@ export class GameService {
   }
 
   async checkEverythingIsReady(bet: any, gameId: number) {
+
     const betInWei = ethers.parseEther(bet);
 
     const allReady = await this.areAllPlayersJoined(gameId);
+
     const logicAddress = await this.getGameLogicAddress(gameId);
     if (allReady) {
       const gamePlayers = await this.getGamePlayers(gameId);
@@ -339,11 +353,10 @@ export class GameService {
         result: 0,
       }));
 
-      const contractData =
-        await this.blockchainService.deployGameLogicAddress(logicAddress);
+      const contractData = await this.blockchainService.deployGameLogicAddress(logicAddress);
       await this.setGameLogicAddress(gameId, contractData.logicAddress);
-      const bettingTime = 5000 * 60;
-      const playingTime = 30000 * 60;
+      const bettingTime = 10000 * 60;
+      const playingTime = 60000 * 60;
       const storageAddress =
         await this.blockchainService.deployGameStorageAddress(
           players,
@@ -351,8 +364,14 @@ export class GameService {
           playingTime,
           contractData.logicAddress,
         );
+
+      const now = Date.now();
+
+      const endBettingTime = new Date(now + bettingTime);
+      const endGameTime = new Date(now + playingTime);
+
       await this.gameCommonService.sendEndTime('betting_time', bettingTime, gameId);
-      await this.updateContractAddress(gameId, storageAddress);
+      await this.updateContractDeployData(gameId, storageAddress, endBettingTime, endGameTime);
       await this.contractListener(gameId, storageAddress);
     }
   }
@@ -381,7 +400,7 @@ export class GameService {
 
     await contract.once('BettingFinished', async () => {
       await this.sendGameData('betting_finished', gameId);
-      const playingTime = 30000 * 60;
+      const playingTime = 60000 * 60;
       await this.gameCommonService.sendEndTime('playing_time', playingTime, gameId);
       await this.createFirstRound(gameId);
     });

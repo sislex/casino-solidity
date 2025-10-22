@@ -72,6 +72,8 @@ export interface IDataGameList {
   finishedAt: any;
   createdAt: string | Date;
   updatedAt: string | Date;
+  endBettingTime: string | Date | null;
+  endGameTime: string | Date | null;
   bet: number;
   playersNumber: number;
   playerNumberSet: number;
@@ -210,6 +212,8 @@ export const initialState: GameDataState = {
       finishedAt: null,
       createdAt: '',
       updatedAt: '',
+      endBettingTime: null,
+      endGameTime: null,
       bet: 0,
       playersNumber: 0,
       playerNumberSet: 0,
@@ -306,6 +310,8 @@ export const gameDataReducer = createReducer(
       finishedAt: item.finishedAt,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
+      endBettingTime: item.endBettingTime,
+      endGameTime: item.endGameTime,
       bet: item.bet || 0,
       playersNumber: item.playersNumber || 0,
       playerNumberSet: item.playerNumberSet || 0,
