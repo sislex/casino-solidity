@@ -25,13 +25,20 @@ import type {
 
 export interface GameBaseInterface extends Interface {
   getFunction(
-    nameOrSignature: "refundAfterBettingDeadline" | "refundAfterGameDeadline"
+    nameOrSignature:
+      | "checkAndHandleBetting"
+      | "refundAfterBettingDeadline"
+      | "refundAfterGameDeadline"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic: "BettingFinished" | "GameFinalized" | "LogBet"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "checkAndHandleBetting",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "refundAfterBettingDeadline",
     values?: undefined
@@ -41,6 +48,10 @@ export interface GameBaseInterface extends Interface {
     values?: undefined
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "checkAndHandleBetting",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "refundAfterBettingDeadline",
     data: BytesLike
@@ -134,6 +145,8 @@ export interface GameBase extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  checkAndHandleBetting: TypedContractMethod<[], [void], "nonpayable">;
+
   refundAfterBettingDeadline: TypedContractMethod<[], [void], "nonpayable">;
 
   refundAfterGameDeadline: TypedContractMethod<[], [void], "nonpayable">;
@@ -142,6 +155,9 @@ export interface GameBase extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "checkAndHandleBetting"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "refundAfterBettingDeadline"
   ): TypedContractMethod<[], [void], "nonpayable">;

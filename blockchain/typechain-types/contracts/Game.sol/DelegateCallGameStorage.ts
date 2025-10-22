@@ -64,6 +64,7 @@ export interface DelegateCallGameStorageInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "abortGame"
+      | "checkAndHandleBetting"
       | "deposit"
       | "finish"
       | "getAllPlayers"
@@ -81,6 +82,10 @@ export interface DelegateCallGameStorageInterface extends Interface {
   ): EventFragment;
 
   encodeFunctionData(functionFragment: "abortGame", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "checkAndHandleBetting",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "finish",
@@ -120,6 +125,10 @@ export interface DelegateCallGameStorageInterface extends Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "abortGame", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "checkAndHandleBetting",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "finish", data: BytesLike): Result;
   decodeFunctionResult(
@@ -235,6 +244,8 @@ export interface DelegateCallGameStorage extends BaseContract {
 
   abortGame: TypedContractMethod<[], [void], "nonpayable">;
 
+  checkAndHandleBetting: TypedContractMethod<[], [void], "nonpayable">;
+
   deposit: TypedContractMethod<[], [void], "nonpayable">;
 
   finish: TypedContractMethod<
@@ -297,6 +308,9 @@ export interface DelegateCallGameStorage extends BaseContract {
 
   getFunction(
     nameOrSignature: "abortGame"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "checkAndHandleBetting"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "deposit"

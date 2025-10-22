@@ -389,4 +389,41 @@ contract GameBase {
         _withdrawRemainingBalance();
     }
 
+    function checkAndHandleBetting() external onlyOwner gameNotFinished gameNotAborted {
+        uint256 nowTimestamp = block.timestamp;
+
+        bool allPaid = true;
+        for (uint256 i = 0; i < playerList.length; i++) {
+            if (!playerList[i].isPaid) {
+                allPaid = false;
+                break;
+            }
+        }
+
+        // 1. Если все оплатили и игра ещё не началась
+        if (allPaid && startedAt == 0) {
+            isBettingComplete = true;
+            startedAt = nowTimestamp;
+            emit BettingFinished();
+            return; // деньги оставляем в контракте, возврат не нужен
+        }
+
+        // 2. Если время ставок вышло
+        if (nowTimestamp > createdAt + bettingMaxTime) {
+            isGameAborted = true;
+
+            for (uint256 i = 0; i < playerList.length; i++) {
+                Player storage player = playerList[i];
+                if (player.isPaid && !player.isPaidOut) {
+                    // возвращаем всю ставку игроку
+                    gameToken.safeTransfer(player.wallet, player.bet);
+                    player.isPaidOut = true;
+                }
+            }
+
+            _withdrawRemainingBalance(); // остаток (если есть) владельцу
+            finishedAt = nowTimestamp;
+            emit GameFinalized(nowTimestamp);
+        }
+    }
 }

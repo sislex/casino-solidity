@@ -244,4 +244,17 @@ export class BlockchainService {
             };
         }
     }
+
+    async stopPayments(contractAddress: string) {
+        if (!contractAddress) throw new Error("Contract address required");
+
+        const contract = new ethers.Contract(contractAddress, DelegateCallGameStorage.abi, this.wallet);
+
+        contract.checkAndHandleBetting().catch(err => {
+            console.error(`Failed to call checkAndHandleBetting: ${err.message}`);
+        });
+
+        return { success: true, message: 'Transaction sent' };
+    }
+
 }

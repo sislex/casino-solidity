@@ -20,7 +20,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "generate-entities": "typeorm-model-generator -h localhost -p 3306 -d game -u root -x root -e mysql -o src/entities",
+    "generate-entities": "typeorm-model-generator -h localhost -p 3307 -d game -u root -x root -e mysql -o src/entities",
     "start:docker": "docker-compose up --build -d"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/platform-socket.io": "^11.1.3",
+    "@nestjs/schedule": "^6.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "@nestjs/websockets": "^11.1.3",
     "bcrypt": "^6.0.0",
@@ -59,7 +60,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.15.32",
+    "@types/node": "^22.18.12",
     "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",

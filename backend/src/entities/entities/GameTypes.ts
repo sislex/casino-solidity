@@ -16,8 +16,8 @@ export class GameTypes {
   @Column("varchar", { name: "name", unique: true, length: 256 })
   name: string;
 
-  @Column("varchar", { name: "logic_address", length: 255 })
-  logicAddress: string;
+  @Column("varchar", { name: "logic_address", nullable: true, length: 255 })
+  logicAddress: string | null;
 
   @OneToMany(() => Games, (games) => games.type2)
   games: Games[];

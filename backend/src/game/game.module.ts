@@ -20,6 +20,7 @@ import {RockPaperScissorsService} from '../services/games/rock-paper-scissors.se
 import {GameCommonService} from '../services/game-common.service';
 import {GameDice} from '../entities/entities/GameDice';
 import {DiceService} from '../services/games/dice.service';
+import {ScheduleModule} from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import {DiceService} from '../services/games/dice.service';
       Users,
     ]),
     JwtModule.registerAsync({
-      imports: [],
+      imports: [ScheduleModule.forRoot()],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET'),

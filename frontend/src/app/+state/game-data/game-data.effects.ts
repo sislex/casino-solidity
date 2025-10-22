@@ -83,6 +83,7 @@ export class GameDataEffects {
           };
           this.gameDataService.createGame(payload).subscribe({
             next: (response) => {
+              console.log(response);
               void this.router.navigate([`/game/${response.gameData.gameId}`]);
               this.store.dispatch(getActiveGames({ game: typeGame }));
               this.store.dispatch(createGameSuccess());
@@ -213,6 +214,8 @@ export class GameDataEffects {
             if (walletIs.length > 0) {
               this.store.dispatch(sendMoneySuccess({response: {wallet, gameId}}))
             }
+          } else if (action.data.sendNote ==='finish_game_data') {
+            console.log('hheeeyyyyy', action)
           }
         })
       ),
