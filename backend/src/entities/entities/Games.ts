@@ -45,6 +45,12 @@ export class Games {
   })
   updatedAt: Date | null;
 
+  @Column("timestamp", { name: "end_betting_time", nullable: true })
+  endBettingTime: Date | null;
+
+  @Column("timestamp", { name: "end_game_time", nullable: true })
+  endGameTime: Date | null;
+
   @OneToOne(() => GameData, (gameData) => gameData.game)
   gameData: GameData;
 
