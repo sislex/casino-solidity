@@ -14,8 +14,7 @@ export class BlockchainService {
     private contract: ethers.Contract | null = null;
     private readonly wallet: ethers.Wallet;
     private readonly logicArtifactPath = path.resolve(
-        __dirname,
-        '../blockchain/contracts/GameLogic.sol/GameLogic.json',
+        './src/blockchain/contracts/GameLogic.sol/GameLogic.json',
     );
     private readonly storageArtifactPath = path.resolve(
         __dirname,
@@ -30,8 +29,7 @@ export class BlockchainService {
     public totalRpcCalls = 0;
 
 
-    constructor(
-    ) {
+    constructor() {
         const privateKey = process.env.OWNER_WALLET;
         this.wallet = new ethers.Wallet(privateKey as string, this.provider);
     }
@@ -62,7 +60,6 @@ export class BlockchainService {
         time2: number,
         logicAddress: string,
     ) {
-
         const storageArtifact = JSON.parse(
             fs.readFileSync(this.storageArtifactPath, 'utf8'),
         );
