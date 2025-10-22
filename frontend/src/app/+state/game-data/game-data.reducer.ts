@@ -72,6 +72,8 @@ export interface IDataGameList {
   finishedAt: any;
   createdAt: string | Date;
   updatedAt: string | Date;
+  endBettingTime: string | Date | null;
+  endGameTime: string | Date | null;
   bet: number;
   playersNumber: number;
   playerNumberSet: number;
@@ -140,7 +142,7 @@ export const initialState: GameDataState = {
         'content_cut',
         'description'
       ],
-      title: 'Rock-Paper-Scissors',
+      title: 'Камень-Ножницы-Бумага',
       linkGame: 'rock-paper-scissors',
       readyStatus: true,
     },
@@ -148,7 +150,7 @@ export const initialState: GameDataState = {
       iconList: [
         'casino'
       ],
-      title: 'Dice',
+      title: 'Кости',
       linkGame: 'dice',
       readyStatus: true,
     },
@@ -156,7 +158,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'roulette'
       ],
-      title: 'Roulette',
+      title: 'Рулетка',
       linkGame: 'roulette',
       readyStatus: false,
     },
@@ -164,7 +166,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'slots'
       ],
-      title: 'Slots',
+      title: 'Слоты',
       linkGame: 'slots',
       readyStatus: false,
     },
@@ -172,7 +174,7 @@ export const initialState: GameDataState = {
       iconList: [
         'style'
       ],
-      title: 'Blackjack',
+      title: 'Блэкджек',
       linkGame: 'blackjack',
       readyStatus: false,
     },
@@ -180,7 +182,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'bingo'
       ],
-      title: 'bingo',
+      title: 'Бинго',
       linkGame: 'bingo',
       readyStatus: false,
     },
@@ -188,7 +190,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'poker'
       ],
-      title: 'Poker',
+      title: 'Покер',
       linkGame: 'poker',
       readyStatus: false,
     },
@@ -196,7 +198,7 @@ export const initialState: GameDataState = {
       svgIconList: [
         'heads-and-tails'
       ],
-      title: 'Heads-And-Tails',
+      title: 'Орел и решка',
       linkGame: 'heads-and-tails',
       readyStatus: false,
     }
@@ -210,6 +212,8 @@ export const initialState: GameDataState = {
       finishedAt: null,
       createdAt: '',
       updatedAt: '',
+      endBettingTime: null,
+      endGameTime: null,
       bet: 0,
       playersNumber: 0,
       playerNumberSet: 0,
@@ -306,6 +310,8 @@ export const gameDataReducer = createReducer(
       finishedAt: item.finishedAt,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
+      endBettingTime: item.endBettingTime,
+      endGameTime: item.endGameTime,
       bet: item.bet || 0,
       playersNumber: item.playersNumber || 0,
       playerNumberSet: item.playerNumberSet || 0,
