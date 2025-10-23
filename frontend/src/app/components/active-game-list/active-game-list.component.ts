@@ -10,7 +10,7 @@ import { GameReloadService } from '../../services/game-reload.service';
   imports: [
     MatButtonModule,
     MatDividerModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './active-game-list.component.html',
   styleUrl: './active-game-list.component.scss'

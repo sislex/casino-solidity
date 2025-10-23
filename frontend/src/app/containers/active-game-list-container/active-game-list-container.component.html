@@ -1,10 +1,10 @@
 @if ((createGameIsLoading$ | async) && !(createGameIsLoaded$ | async)) {
   <app-loader
-    [title]="('Wait... the game contract is being deployed to the ' + ((getBalanceData$ | async)?.networkName) + ' network') || 'loading...'"
+    [title]="('Ожидайте... контракт игры загружается в сеть ' + ((getBalanceData$ | async)?.networkName)) || 'загрузка...'"
   ></app-loader>
 } @else {
   <mat-tab-group class="custom-tab-group" animationDuration="0ms">
-    <mat-tab label="Wait Players">
+    <mat-tab label="Ожидающие игроков">
       <app-active-game-list
         [gameType]="gameType"
         [player]="getPlayer$ | async"
@@ -12,7 +12,7 @@
         (emitter)="events($event)"
       ></app-active-game-list>
     </mat-tab>
-    <mat-tab label="Game in progress">
+    <mat-tab label="Игры в процессе">
       <app-active-game-list
         [gameType]="gameType"
         [player]="getPlayer$ | async"
@@ -20,7 +20,7 @@
         (emitter)="events($event)"
       ></app-active-game-list>
     </mat-tab>
-    <mat-tab label="Finished">
+    <mat-tab label="Законченые">
       <app-active-game-list
         [gameType]="gameType"
         [player]="getPlayer$ | async"
@@ -28,7 +28,7 @@
         (emitter)="events($event)"
       ></app-active-game-list>
     </mat-tab>
-    <mat-tab label="All Games">
+    <mat-tab label="Все игры">
       <app-active-game-list
         [gameType]="gameType"
         [player]="getPlayer$ | async"

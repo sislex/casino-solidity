@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import {IBalanceData} from '../../+state/game-data/game-data.reducer';
 
 @Component({
   selector: 'app-create-game-form',
@@ -13,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './create-game-form.component.scss'
 })
 export class CreateGameFormComponent {
+  @Input() balanceData!: IBalanceData;
   @Output() emitter = new EventEmitter();
   playersNumber = 2;
   bots = 0;

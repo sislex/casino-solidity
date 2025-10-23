@@ -30,8 +30,8 @@ export class BlockchainService {
 
 
     constructor() {
-        const privateKey = process.env.OWNER_WALLET;
-        this.wallet = new ethers.Wallet(privateKey as string, this.provider);
+            const privateKey = process.env.OWNER_WALLET;
+            this.wallet = new ethers.Wallet(privateKey as string, this.provider);
     }
 
     async deployGameLogicAddress(logicAddress: any) {

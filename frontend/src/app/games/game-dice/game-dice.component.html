@@ -3,7 +3,7 @@
 }
 @if ((selectActiveGameData$ | async)?.finishedPopup) {
   <app-loader
-    [title]="'Your winnings are being calculated — please wait...'"
+    [title]="'Победитель рассчитывается — пожалуйста, ожидайте...'"
   ></app-loader>
 }
 @if ((selectActiveGameData$ | async)?.status === 'Game') {
@@ -22,7 +22,7 @@
         class="button-roll"
         [disabled]="!localYourPlay"
         (click)="localYourPlay && roll()">
-        Roll Dice
+        Бросить кости
       </button>
     </div>
   </div>

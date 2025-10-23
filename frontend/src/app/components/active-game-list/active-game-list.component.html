@@ -4,7 +4,13 @@
     <button mat-icon-button class="toggle home-icon" (click)="event('home', gameType)">
       <mat-icon>home</mat-icon>
     </button>
-    <span>{{ gameType }}</span>
+    <span>
+      @if (gameType === 'dice' ) {
+        Кости
+      } @else if (gameType === 'rock-paper-scissors') {
+        Камень-Ножницы-Бумага
+      }
+    </span>
     <span class="example-spacer"></span>
     <button mat-icon-button class="toggle" (click)="event('reload', gameType)">
       <mat-icon>replay</mat-icon>
@@ -17,9 +23,9 @@
       <tr class="table-header">
         <th class="header-cell">#</th>
         <th class="header-cell">ID</th>
-        <th class="header-cell">Players</th>
-        <th class="header-cell">Bots</th>
-        <th class="header-cell">Bet</th>
+        <th class="header-cell">Игроки</th>
+        <th class="header-cell">Боты</th>
+        <th class="header-cell">Ставка</th>
         <th class="header-cell"></th>
       </tr>
       </thead>
@@ -70,6 +76,6 @@
   </div>
 
   <div class="footer">
-    <button mat-raised-button (click)="event('create', gameType)">Create</button>
+    <button mat-raised-button (click)="event('create', gameType)">Создать</button>
   </div>
 </div>

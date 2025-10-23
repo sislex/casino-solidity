@@ -77,8 +77,8 @@ export class ActiveGameListContainerComponent implements OnInit {
 
   openCreateGameModal(): void {
     this.dialog.open(CreateGameFormContainerComponent, {
-      width: '60%',
-      height: '40%',
+      width: '800px',
+      height: '500px',
       hasBackdrop: true,
       data: { gameType: this.gameType }
     });

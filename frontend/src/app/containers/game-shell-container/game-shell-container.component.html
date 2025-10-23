@@ -11,7 +11,7 @@
 >
   @if ((paymentGameIsLoading$ | async) && !(paymentGameIsLoaded$ | async)) {
     <app-loader
-      [title]="'You are in line to pay...'"
+      [title]="'Вы в очереди на оплату...'"
     ></app-loader>
   } @else {
     @if ((selectActiveGameData$ | async)?.type ==='rock-paper-scissors')

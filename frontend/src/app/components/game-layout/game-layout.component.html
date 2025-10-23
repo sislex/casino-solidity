@@ -4,24 +4,33 @@
       <button mat-icon-button class="toggle home-icon" (click)="event('home')">
         <mat-icon>undo</mat-icon>
       </button>
-      <span>ID: {{ gameData.id }} | &nbsp;</span>
+      <span>ID: {{ gameData.id }} |&nbsp;</span>
       @if (gameData.status === 'notStarted') {
-        <span>{{ gameData.type }} | Wait Players: {{ gameData.playerNumberSet}}/{{ gameData.playersNumber}} </span>
+        <span>{{ gameData.type }} | Игроков подключено: {{ gameData.playerNumberSet}}/{{ gameData.playersNumber}} </span>
       } @else {
-        <span>{{ gameData.type }} | {{ gameData.status}}</span>
+        <span>@if (gameData.type === 'dice' ) {
+            Кости
+          } @else if (gameData.type === 'rock-paper-scissors') {
+            Камень-Ножницы-Бумага
+          } |
+          @if (gameData.status === 'Game') {
+            Игра идет
+          } @else if (gameData.status === 'Finished') {
+            Игра закончена
+          } @else if (gameData.status === 'Pay') {
+            Ожидаем оплату
+          }
+        </span>
       }
     </div>
 
     @if (!(gameData.status === 'Finished')) {
       <div class="middle-group">
         @if (round && (gameData.finishedAt === '-')) {
-          <span> ROUND: {{round}} | TIME TO END GAME: &nbsp;</span>
+          <span> РАУНД: {{round}} | Время до конца игры: &nbsp;</span>
         }
         @if (timer > 0) {
-          <app-timer
-            [timerData]="timer"
-          >
-          </app-timer>
+          <app-timer [timerData]="timer"></app-timer>
         }
       </div>
     }
@@ -29,15 +38,15 @@
     <div class="right-group">
       @if (gameData.status === 'Waiting payment' && !playerIsBet) {
         <button class="pay-button" mat-button [disabled]="!(gameData.status === 'Waiting payment')" (click)="sendEvent('pay')">
-          Pay
+          Оплатить
         </button>
       }
       @if (gameData.status === 'notStarted') {
         @if (isConnected) {
-          <button class="footer-button" mat-raised-button [disabled]="!(gameData.status === 'notStarted')" (click)="event('observe')">Disconnect & Stay</button>
-          <button class="footer-button" mat-raised-button [disabled]="!(gameData.status === 'notStarted')" (click)="event('leave')">Disconnect & Leave</button>
+          <button class="footer-button" mat-raised-button [disabled]="!(gameData.status === 'notStarted')" (click)="event('observe')">Отключиться и остаться</button>
+          <button class="footer-button" mat-raised-button [disabled]="!(gameData.status === 'notStarted')" (click)="event('leave')">Отключится и покинуть</button>
         } @else {
-          <button class="footer-button" mat-raised-button [disabled]="(gameData.playersNumber === gameData.playerNumberSet)" (click)="event('connect')">Connect to game</button>
+          <button class="footer-button" mat-raised-button [disabled]="(gameData.playersNumber === gameData.playerNumberSet)" (click)="event('connect')">Подключиться к игре</button>
         }
       }
     </div>

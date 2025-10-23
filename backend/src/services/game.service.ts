@@ -260,7 +260,7 @@ export class GameService {
   }
 
 
-  async areAllPlayersJoined(gameId: number): Promise<boolean> {
+async areAllPlayersJoined(gameId: number): Promise<boolean> {
     const game = await this.gameCommonService.getGameDataById(gameId);
 
     if (!game) {
@@ -274,10 +274,10 @@ export class GameService {
   }
 
   async updateContractDeployData(
-      gameId: number,
-      contractAddress: string,
-      endBettingTime: Date,
-      endGameTime: Date,
+    gameId: number,
+    contractAddress: string,
+    endBettingTime: Date,
+    endGameTime: Date,
   ): Promise<void> {
     const game = await this.gameRepository.findOne({ where: { id: gameId } });
     if (!game) {
@@ -358,12 +358,12 @@ export class GameService {
       const bettingTime = 10000 * 60;
       const playingTime = 60000 * 60;
       const storageAddress =
-          await this.blockchainService.deployGameStorageAddress(
-              players,
-              bettingTime,
-              playingTime,
-              contractData.logicAddress,
-          );
+        await this.blockchainService.deployGameStorageAddress(
+          players,
+          bettingTime,
+          playingTime,
+          contractData.logicAddress,
+        );
 
       const now = Date.now();
 
