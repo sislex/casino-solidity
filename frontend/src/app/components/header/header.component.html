@@ -5,11 +5,11 @@
     </button>
     <div class="spacer"></div>
     @if (!player?.isLogin) {
-      <app-login-button (click)="events('login')" [label]="'Login'"></app-login-button>
-      <app-register-button (click)="events('registration')" [label]="'Registration'"></app-register-button>
+      <app-login-button (click)="events('login')" [label]="'Логин'"></app-login-button>
+      <app-register-button (click)="events('registration')" [label]="'Регистрация'"></app-register-button>
     }
     @if (player?.isLogin) {
-      <app-logout-button (click)="events('logout')" [label]="'Logout'"></app-logout-button>
+      <app-logout-button (click)="events('logout')" [label]="'Выход'"></app-logout-button>
     }
   </div>
 </mat-toolbar>

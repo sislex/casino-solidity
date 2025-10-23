@@ -2,7 +2,7 @@
   <div class="result">
     <div class="tool">
       <span class="login">
-        Game results: <strong>{{ (selectActiveGameData$ | async)?.id }}</strong>
+        Результаты игры: <strong>{{ (selectActiveGameData$ | async)?.id }}</strong>
       </span>
 
       <span class="example-spacer"></span>
@@ -15,7 +15,13 @@
     <div class="result-card">
       <div class="result-info">
         <span>
-          Game type: <strong>{{ (selectActiveGameData$ | async)?.type }}</strong>
+          Игра: <strong>
+          @if ((selectActiveGameData$ | async)?.type === 'dice' ) {
+            Кости
+          } @else if ((selectActiveGameData$ | async)?.type === 'rock-paper-scissors') {
+            Камень-Ножницы-Бумага
+          }
+          </strong>
         </span>
 
         @if (
@@ -24,7 +30,7 @@
           (result !== null)
           ) {
           <span>
-            Duration:
+            Продолжительность игры:
             <strong>
               {{
                 calculateDuration(
@@ -36,19 +42,19 @@
           </span>
         }
         @if (result !== null) {
-        <span>
-          Winner: <strong>{{ (selectNameWinner$ | async) || 'Is determined' }}</strong>
+          <span>
+          Победитель: <strong>{{ (selectNameWinner$ | async) || 'Is determined' }}</strong>
         </span>
 
           <span>
-            Your result: <strong>{{ result }}</strong>
+            Ваш выигрыш: <strong>{{ result }}</strong>
           </span>
         }
       </div>
 
       @if (result === null) {
         <div class="wait-result">
-          Your winnings are being calculated — please wait...
+          Ваш выигрыш рассчитывается — пожалуйста, ожидайте...
         </div>
       }
     </div>

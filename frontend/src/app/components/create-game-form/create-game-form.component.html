@@ -1,7 +1,7 @@
 <div class="parent-container">
   <div class="content-container">
     <form class="example-form">
-      <div>Players</div>
+      <div>Количество игроков</div>
       <mat-form-field class="example-full-width">
         <input matInput
                [(ngModel)]="playersNumber"
@@ -15,13 +15,13 @@
         @if (playersInput.invalid && playersInput.touched) {
           <mat-error>
             @if (playersInput.errors?.['required']) {
-              <span>Number of players is required</span>
+              <span>Введите количество игроков</span>
             }
             @if (playersInput.errors?.['min']) {
-              <span>Minimum 1 player</span>
+              <span>Минимум 1 игрок</span>
             }
             @if (playersInput.errors?.['max']) {
-              <span>Maximum 10 players</span>
+              <span>Максимум 10 игроков</span>
             }
           </mat-error>
         }
@@ -29,7 +29,7 @@
     </form>
 
     <form class="example-form">
-      <div>Bots</div>
+      <div>Количество ботов</div>
       <mat-form-field class="example-full-width">
         <input matInput
                [(ngModel)]="bots"
@@ -42,10 +42,10 @@
         @if (botsInput.invalid && botsInput.touched) {
           <mat-error>
             @if (botsInput.errors?.['min']) {
-              <span>Minimum 0 bots</span>
+              <span>Минимум 0 ботов</span>
             }
             @if (botsInput.errors?.['max']) {
-              <span>Maximum 4 bots</span>
+              <span>Максимум 4 бота</span>
             }
           </mat-error>
         }
@@ -53,7 +53,7 @@
     </form>
 
     <form class="example-form">
-      <div>Bet, $</div>
+      <div>Ставка, {{ balanceData.nameToken }} </div>
       <mat-form-field class="example-full-width">
         <input matInput
                [(ngModel)]="bet"
@@ -66,10 +66,10 @@
         @if (betInput.invalid && betInput.touched) {
           <mat-error>
             @if (betInput.errors?.['required']) {
-              <span>Bet amount is required</span>
+              <span>Введите ставку</span>
             }
             @if (betInput.errors?.['pattern']) {
-              <span>Only digits, maximum 10 characters</span>
+              <span>Только цифры, максимум 10 знаков</span>
             }
           </mat-error>
         }
@@ -80,12 +80,12 @@
   <div class="buttons-container">
     <div class="spacer"></div>
     <button class="default-button" (click)="events('cancel')">
-      Cancel
+      Назад
     </button>
     <button class="primary-button"
             (click)="events('create')"
             [disabled]="!isFormValid()">
-      Create
+      Создать
     </button>
   </div>
 </div>

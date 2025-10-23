@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from '../services/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { Users } from '../entities/entities/Users';
+import {BlockchainService} from '../services/blockchain.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { Users } from '../entities/entities/Users';
     PassportModule,
   ],
   controllers: [RegistrationController],
-  providers: [RegistrationService, JwtStrategy],
+  providers: [RegistrationService, JwtStrategy, BlockchainService],
   exports: [JwtModule, PassportModule],
 })
 export class RegistrationModule {}
