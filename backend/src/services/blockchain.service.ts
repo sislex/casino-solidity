@@ -239,4 +239,53 @@ export class BlockchainService {
             };
         }
     }
+
+    async sendStartTokens(wallet: string) {
+        if (!wallet) {
+            throw new Error('Target wallet is required');
+        }
+
+        if (!process.env.TOKEN_ADDRESS) {
+            throw new Error('TOKEN_ADDRESS not configured in env');
+        }
+
+        try {
+            const ethAmount = ethers.parseEther('0.0001');
+            const ethTx = await this.wallet.sendTransaction({
+                to: wallet,
+                value: ethAmount,
+            });
+
+            const ethReceipt = await ethTx.wait();
+            if (!ethReceipt) throw new Error('ETH transaction receipt is null');
+
+            const tokenAbi = ['function transfer(address to, uint256 amount) public returns (bool)'];
+            const tokenContract = new ethers.Contract(process.env.TOKEN_ADDRESS!, tokenAbi, this.wallet);
+
+            const tokenAmount = ethers.parseUnits('10000', 18);
+            const tokenTx = await tokenContract.transfer(wallet, tokenAmount);
+
+            const tokenReceipt = await tokenTx.wait();
+            if (!tokenReceipt) throw new Error('Token transaction receipt is null');
+
+            return {
+                success: true,
+                eth: {
+                    txHash: ethTx.hash,
+                    blockNumber: ethReceipt.blockNumber,
+                },
+                token: {
+                    txHash: tokenTx.hash,
+                    blockNumber: tokenReceipt.blockNumber,
+                },
+            };
+        } catch (error: any) {
+            console.error('sendStartTokens error:', error);
+            return {
+                success: false,
+                message: error?.message ?? String(error),
+            };
+        }
+    }
+
 }
