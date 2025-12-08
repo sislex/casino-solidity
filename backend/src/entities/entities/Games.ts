@@ -58,8 +58,8 @@ export class Games {
   gamePlayers: GamePlayers[];
 
   @OneToMany(
-      () => GameRockPaperScissors,
-      (gameRockPaperScissors) => gameRockPaperScissors.game
+    () => GameRockPaperScissors,
+    (gameRockPaperScissors) => gameRockPaperScissors.game
   )
   gameRockPaperScissors: GameRockPaperScissors[];
 
