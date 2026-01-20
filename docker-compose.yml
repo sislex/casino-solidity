@@ -38,6 +38,7 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./backend/migration/game-structure.sql:/docker-entrypoint-initdb.d/game-structure.sql
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
